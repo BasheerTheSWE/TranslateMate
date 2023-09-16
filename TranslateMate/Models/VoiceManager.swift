@@ -36,6 +36,7 @@ final class VoiceManager {
     func stopRecording(completion: @escaping (() -> Void)) {
         audioEngine.stop()
         recognitionRequest?.endAudio()
+        completion()
     }
     
     

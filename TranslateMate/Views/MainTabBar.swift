@@ -111,7 +111,7 @@ final class MainTabBar: UITabBarController {
             voiceVC,
             typeVC
         ]
-        
+                
         configureTabBar()
         configureGestures()
         configureSubviews()
@@ -136,8 +136,8 @@ final class MainTabBar: UITabBarController {
         voiceDelegate?.startVoiceRecording()
         
         voiceImageView.tintColor = .systemRed
-        voiceButtonView.layer.shadowColor = CGColor(red: 1, green: 0.5, blue: 0.5, alpha: 1)
-        voiceButtonView.layer.shadowRadius = 10
+        voiceButtonView.layer.shadowColor = CGColor(red: 1, green: 0.25, blue: 0.25, alpha: 1)
+        voiceButtonView.layer.shadowRadius = 20
     }
     
     

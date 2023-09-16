@@ -14,6 +14,7 @@ protocol VoiceRecordingAuthDelegate {
 
 final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     var voiceRecordingAuthDelegate: VoiceRecordingAuthDelegate?
+    private var targetLanguageIndex: Int = 0
     
     private let languages: [[String: String]] = [
         [
@@ -145,7 +146,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
             "code": "sr"
         ],
         [
-            "language" : "Spanish, Castilian",
+            "language" : "Spanish",
             "code": "es"
         ],
         [
@@ -189,7 +190,6 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     private let recordedTextView: UITextView = {
         let textView = UITextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
-        textView.text = "This is Just a Test"
         textView.isEditable = false
         
         textView.font = .systemFont(ofSize: 25, weight: .medium)
@@ -197,23 +197,6 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         
         return textView
     }()
-    
-//    private lazy var recordedTextViewFooter: UIView = {
-//        let view = UIView()
-//        view.frame.size = CGSize(width: self.view.frame.width, height: self.view.frame.height)
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//
-//        view.backgroundColor = .systemBackground
-//
-//        view.layer.shadowColor = UIColor.white.cgColor
-//        view.layer.shadowOpacity = 1
-//        view.layer.shadowOffset = .zero
-//        view.layer.shadowRadius = 200
-//
-//        view.layer.shadowPath = UIBezierPath(rect: view.bounds).cgPath
-//
-//        return view
-//    }()
     
     private let sourceLanguageView: UIView = {
         let view = UIView()
@@ -257,6 +240,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         field.translatesAutoresizingMaskIntoConstraints = false
         
         field.text = languages[0]["language"]
+        field.allowsEditingTextAttributes = false
         
         field.inputView = languagePicker
         field.textAlignment = .left
@@ -265,7 +249,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         
         field.leftViewMode = .always
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 0))
-        
+
         return field
     }()
     
@@ -292,7 +276,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         NSLayoutConstraint.activate([
             targetLanguageTextField.topAnchor.constraint(equalTo: view.topAnchor),
             targetLanguageTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            targetLanguageTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            targetLanguageTextField.trailingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: -5),
             targetLanguageTextField.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
@@ -300,6 +284,16 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
             imageView.widthAnchor.constraint(equalToConstant: 20),
             imageView.heightAnchor.constraint(equalToConstant: 20)
         ])
+        
+        return view
+    }()
+    
+    private let targetLanguageTapRegion: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.backgroundColor = .clear
+        view.isUserInteractionEnabled = true
         
         return view
     }()
@@ -330,10 +324,10 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     
     override func viewDidLayoutSubviews() {
         view.addSubview(recordedTextView)
-//        view.addSubview(recordedTextViewFooter)
         view.addSubview(sourceLanguageView)
         view.addSubview(translateIcon)
         view.addSubview(targetLanguageView)
+        view.addSubview(targetLanguageTapRegion)
         
         configureAutoLayout()
     }
@@ -350,13 +344,22 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         view.addGestureRecognizer(viewGesture)
         
         let targetLanguageGesture = UITapGestureRecognizer(target: self, action: #selector(changeLanguage))
-        targetLanguageTextField.addGestureRecognizer(targetLanguageGesture)
+        targetLanguageTapRegion.addGestureRecognizer(targetLanguageGesture)
+        
+        let textViewGesture = UITapGestureRecognizer(target: self, action: #selector(cancelLanguageChange))
+        recordedTextView.addGestureRecognizer(textViewGesture)
     }
     
     // MARK: - ACTIONS
     private func translate() {
-        guard !recordedTextView.text.isEmpty else { return }
+        guard !recordedTextView.text.isEmpty,
+              let text = recordedTextView.text,
+              let target = languages[targetLanguageIndex]["code"] else { return }
         
+        APIManager.shared.translate(text: text, target: target, source: "en") { data in
+            guard let data = try? JSONSerialization.jsonObject(with: data) else { return }
+            print(data)
+        }
     }
     
     
@@ -412,7 +415,12 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
             targetLanguageView.topAnchor.constraint(equalTo: sourceLanguageView.topAnchor),
             targetLanguageView.leadingAnchor.constraint(equalTo: translateIcon.trailingAnchor, constant: 15),
             targetLanguageView.widthAnchor.constraint(equalToConstant: 150),
-            targetLanguageView.heightAnchor.constraint(equalToConstant: 50)
+            targetLanguageView.heightAnchor.constraint(equalToConstant: 50),
+            
+            targetLanguageTapRegion.topAnchor.constraint(equalTo: targetLanguageView.topAnchor),
+            targetLanguageTapRegion.leadingAnchor.constraint(equalTo: targetLanguageView.leadingAnchor),
+            targetLanguageTapRegion.trailingAnchor.constraint(equalTo: targetLanguageView.trailingAnchor),
+            targetLanguageTapRegion.bottomAnchor.constraint(equalTo: targetLanguageView.bottomAnchor)
         ])
     }
 }
@@ -438,6 +446,7 @@ extension VoiceVC: UIPickerViewDelegate, UIPickerViewDataSource {
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         targetLanguageTextField.text = languages[row]["language"]
+        targetLanguageIndex = row
         
         cancelLanguageChange()
     }
