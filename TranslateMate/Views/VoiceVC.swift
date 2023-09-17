@@ -307,6 +307,103 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         return imageView
     }()
     
+    private let translationTextView: UITextView = {
+        let textView = UITextView()
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.text = " kan ksc asbc abk cabs ca ckja jbj ascb asjc saj cb sacj asj csa cbs jbc ajsc sbc sjb cjsa cjkbj cjbs kjbc jk cjs ja aj ja  sdj aaaa bjsa bc asj ajb asjbc jk fbe uvbweoiv ubsd vbu siuv bsu vbs dbv akj bvjka bkj ba bc askjb ckjas kjas bva bv ab cjas vbds vbskdjv bsj vbj sdavbj adbkv jdasjvba bk d v aj vb;ak jc aksj vkb;ajsd js cva svbkjasd vbaj d;k vdksa; sad j ja ;j as jasd aj ja vbe;kuvb; kajbv ja vj; abvj asdbjv bsadkv jas va vkd ksj abkjvdsab kjv akjv akjbvkjds bvkeu askv cb;keudbv ;kjsd cvkjas bfkvdsacjdsa "
+        
+        textView.isEditable = false
+        textView.font = .systemFont(ofSize: 20, weight: .medium)
+        textView.textAlignment = .center
+        textView.backgroundColor = .clear
+        
+        return textView
+    }()
+    
+    private let copyIcon: UIImageView = {
+        let imageView = UIImageView(image: UIImage(systemName: "square.on.square"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        imageView.tintColor = .systemGray
+        
+        return imageView
+    }()
+    
+    private let speakIcon: UIImageView = {
+        let imageView = UIImageView(image: UIImage(systemName: "speaker.wave.2"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        imageView.tintColor = .systemGray
+        
+        return imageView
+    }()
+    
+    private let checkIcon: UIImageView = {
+        let imageView = UIImageView(image: UIImage(systemName: "checkmark.circle"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        imageView.tintColor = .systemGray
+        
+        return imageView
+    }()
+    
+    private lazy var translationView: UIView = {
+        let view = UIView()
+        view.frame.size = CGSize(width: self.view.frame.width - 75, height: 350)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.backgroundColor = .systemBackground
+        view.layer.cornerRadius = 8
+        
+        view.layer.shadowColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
+        view.layer.shadowOpacity = 0.5
+        view.layer.shadowOffset = .zero
+        view.layer.shadowRadius = 3
+        
+        view.layer.shadowPath = UIBezierPath(roundedRect: view.bounds, cornerRadius: 8).cgPath
+        
+        // Components
+        let separator = UIView()
+        separator.translatesAutoresizingMaskIntoConstraints = false
+        separator.backgroundColor = .systemGray3
+        
+        view.addSubview(translationTextView)
+        view.addSubview(separator)
+        view.addSubview(copyIcon)
+        view.addSubview(speakIcon)
+        view.addSubview(checkIcon)
+        
+        // AutoLayout
+        NSLayoutConstraint.activate([
+            translationTextView.topAnchor.constraint(equalTo: view.topAnchor),
+            translationTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
+            translationTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
+            translationTextView.bottomAnchor.constraint(equalTo: separator.topAnchor),
+            
+            separator.heightAnchor.constraint(equalToConstant: 0.5),
+            separator.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            separator.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            separator.bottomAnchor.constraint(equalTo: speakIcon.topAnchor, constant: -15),
+            
+            copyIcon.centerYAnchor.constraint(equalTo: speakIcon.centerYAnchor),
+            copyIcon.trailingAnchor.constraint(equalTo: speakIcon.leadingAnchor, constant: -45),
+            copyIcon.widthAnchor.constraint(equalToConstant: 20),
+            copyIcon.heightAnchor.constraint(equalToConstant: 20),
+            
+            speakIcon.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            speakIcon.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -15),
+            speakIcon.widthAnchor.constraint(equalToConstant: 20),
+            speakIcon.heightAnchor.constraint(equalToConstant: 20),
+            
+            checkIcon.centerYAnchor.constraint(equalTo: speakIcon.centerYAnchor),
+            checkIcon.leadingAnchor.constraint(equalTo: speakIcon.trailingAnchor, constant: 45),
+            checkIcon.widthAnchor.constraint(equalToConstant: 20),
+            checkIcon.heightAnchor.constraint(equalToConstant: 20),
+        ])
+        
+        return view
+    }()
+    
     
     // MARK: - VDL
     override func viewDidLoad() {
@@ -328,6 +425,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         view.addSubview(translateIcon)
         view.addSubview(targetLanguageView)
         view.addSubview(targetLanguageTapRegion)
+        view.addSubview(translationView)
         
         configureAutoLayout()
     }
@@ -420,7 +518,12 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
             targetLanguageTapRegion.topAnchor.constraint(equalTo: targetLanguageView.topAnchor),
             targetLanguageTapRegion.leadingAnchor.constraint(equalTo: targetLanguageView.leadingAnchor),
             targetLanguageTapRegion.trailingAnchor.constraint(equalTo: targetLanguageView.trailingAnchor),
-            targetLanguageTapRegion.bottomAnchor.constraint(equalTo: targetLanguageView.bottomAnchor)
+            targetLanguageTapRegion.bottomAnchor.constraint(equalTo: targetLanguageView.bottomAnchor),
+            
+            translationView.widthAnchor.constraint(equalToConstant: self.view.frame.width - 75),
+            translationView.heightAnchor.constraint(equalToConstant: 350),
+            translationView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            translationView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -25)
         ])
     }
 }
