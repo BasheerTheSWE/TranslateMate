@@ -10,7 +10,7 @@ import Foundation
 class APIManager {
     static let shared = APIManager()
     
-    func translate(text: String, target: String, source: String, completion: @escaping ((Data) -> Void)) {        
+    func translate(text: String, target: String, source: String = "en", completion: @escaping ((Data) -> Void)) {
         let headers: [String: String] = [
             "content-type": "application/x-www-form-urlencoded",
             "Accept-Encoding": "application/gzip",

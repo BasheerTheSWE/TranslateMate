@@ -7,12 +7,25 @@
 
 import UIKit
 import Speech
+import AVFoundation
 
 protocol VoiceRecordingAuthDelegate {
     func setAuthResults(result: Bool)
 }
 
 final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
+    /*
+        * The status variable is used because there's a weird glitch that happen when I stop the audio recording. The device takes a final iteration and set the recorded text to what the microphone got, when its already having that value. So when I decide to clear it exactly when the audio recording is stopped that final iteration kicks in and reseted again.
+     */
+    
+    enum Status {
+        case isRecording
+        case notRecording
+    }
+    
+    private var status: Status = .notRecording
+    
+    
     var voiceRecordingAuthDelegate: VoiceRecordingAuthDelegate?
     private var targetLanguageIndex: Int = 0
     
@@ -352,27 +365,32 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         
+        view.isUserInteractionEnabled = true
+        
         return view
     }()
     
     private let speakTapRegion: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-                
+        
+        view.isUserInteractionEnabled = true
+        
         return view
     }()
     
     private let checkTapRegion: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-                
+        
+        view.isUserInteractionEnabled = true
+        
         return view
     }()
     
     private lazy var translationView: UIView = {
         let view = UIView()
-        view.frame.size = CGSize(width: self.view.frame.width - 75, height: 350)
-        view.translatesAutoresizingMaskIntoConstraints = false
+        view.frame = CGRect(x: 37.5, y: self.view.frame.height + 15, width: self.view.frame.width - 75, height: 350)
         
         view.backgroundColor = .systemBackground
         view.layer.cornerRadius = 8
@@ -426,17 +444,17 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
             checkIcon.heightAnchor.constraint(equalToConstant: 20),
             
             copyTapRegion.topAnchor.constraint(equalTo: separator.bottomAnchor),
-            copyTapRegion.trailingAnchor.constraint(equalTo: speakTapRegion.leadingAnchor),
+            copyTapRegion.centerXAnchor.constraint(equalTo: copyIcon.centerXAnchor),
             copyTapRegion.widthAnchor.constraint(equalToConstant: 45),
             copyTapRegion.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             speakTapRegion.topAnchor.constraint(equalTo: separator.bottomAnchor),
-            speakTapRegion.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            speakTapRegion.centerXAnchor.constraint(equalTo: speakIcon.centerXAnchor),
             speakTapRegion.widthAnchor.constraint(equalToConstant: 45),
             speakTapRegion.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             checkTapRegion.topAnchor.constraint(equalTo: separator.bottomAnchor),
-            checkTapRegion.leadingAnchor.constraint(equalTo: speakTapRegion.leadingAnchor),
+            checkTapRegion.centerXAnchor.constraint(equalTo: checkIcon.centerXAnchor),
             checkTapRegion.widthAnchor.constraint(equalToConstant: 45),
             checkTapRegion.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
@@ -503,7 +521,13 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
               let text = recordedTextView.text,
               let target = languages[targetLanguageIndex]["code"] else { return }
         
-        APIManager.shared.translate(text: text, target: target, source: "en") { data in
+        recordedTextView.text = ""
+        
+        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: [.allowUserInteraction]) {
+            self.translationView.frame.origin.y = self.view.center.y - 175
+        }
+        
+        APIManager.shared.translate(text: text, target: target) { data in
             guard let data = try? JSONSerialization.jsonObject(with: data) else { return }
             print(data)
         }
@@ -543,17 +567,28 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     
     
     @objc private func copyTranslation() {
-        
+        UIPasteboard.general.string = translationTextView.text
     }
     
     
     @objc private func speakTranslation() {
+        let speechSynthesizer = AVSpeechSynthesizer()
+        let speechUtterance = AVSpeechUtterance(string: translationTextView.text)
         
+        // Configure the speech utterance as needed
+        speechUtterance.rate = AVSpeechUtteranceDefaultSpeechRate // Adjust speech rate
+        speechUtterance.voice = AVSpeechSynthesisVoice(language: "en-US") // Specify the desired language
+        
+        // Start speaking
+        speechSynthesizer.speak(speechUtterance)
     }
     
     
     @objc private func clearTranslation() {
-        
+        UIView.animate(withDuration: 0.25) {
+            self.translationView.frame.origin.y = self.view.frame.height + 15
+            self.translationTextView.text = ""
+        }
     }
     
     // MARK: - AUTOLAYOUT
@@ -584,10 +619,10 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
             targetLanguageTapRegion.trailingAnchor.constraint(equalTo: targetLanguageView.trailingAnchor),
             targetLanguageTapRegion.bottomAnchor.constraint(equalTo: targetLanguageView.bottomAnchor),
             
-            translationView.widthAnchor.constraint(equalToConstant: self.view.frame.width - 75),
-            translationView.heightAnchor.constraint(equalToConstant: 350),
-            translationView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            translationView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -25)
+//            translationView.widthAnchor.constraint(equalToConstant: self.view.frame.width - 75),
+//            translationView.heightAnchor.constraint(equalToConstant: 350),
+//            translationView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+////            translationView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -25)
         ])
     }
 }
@@ -624,9 +659,18 @@ extension VoiceVC: UIPickerViewDelegate, UIPickerViewDataSource {
 extension VoiceVC: VoiceDelegate {
     
     func startVoiceRecording() {
+        status = .isRecording
+        
+        UIView.animate(withDuration: 0.25) {
+            self.translationView.frame.origin.y = self.view.frame.height + 15
+            self.translationTextView.text = ""
+        }
+        
         do {
             try VoiceManager.shared.startRecording { text in
-                self.recordedTextView.text = text
+                if self.status == .isRecording {
+                    self.recordedTextView.text = text
+                }
             }
         } catch {
             print("error")
@@ -634,6 +678,7 @@ extension VoiceVC: VoiceDelegate {
     }
     
     func stopVoiceRecording() {
+        status = .notRecording
         VoiceManager.shared.stopRecording {
             self.translate()
         }
