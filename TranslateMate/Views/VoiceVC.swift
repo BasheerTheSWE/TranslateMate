@@ -249,7 +249,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         
         field.leftViewMode = .always
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 0))
-
+        
         return field
     }()
     
@@ -312,6 +312,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.text = " kan ksc asbc abk cabs ca ckja jbj ascb asjc saj cb sacj asj csa cbs jbc ajsc sbc sjb cjsa cjkbj cjbs kjbc jk cjs ja aj ja  sdj aaaa bjsa bc asj ajb asjbc jk fbe uvbweoiv ubsd vbu siuv bsu vbs dbv akj bvjka bkj ba bc askjb ckjas kjas bva bv ab cjas vbds vbskdjv bsj vbj sdavbj adbkv jdasjvba bk d v aj vb;ak jc aksj vkb;ajsd js cva svbkjasd vbaj d;k vdksa; sad j ja ;j as jasd aj ja vbe;kuvb; kajbv ja vj; abvj asdbjv bsadkv jas va vkd ksj abkjvdsab kjv akjv akjbvkjds bvkeu askv cb;keudbv ;kjsd cvkjas bfkvdsacjdsa "
         
+        textView.showsVerticalScrollIndicator = false
         textView.isEditable = false
         textView.font = .systemFont(ofSize: 20, weight: .medium)
         textView.textAlignment = .center
@@ -347,6 +348,27 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         return imageView
     }()
     
+    private let copyTapRegion: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
+    private let speakTapRegion: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+                
+        return view
+    }()
+    
+    private let checkTapRegion: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+                
+        return view
+    }()
+    
     private lazy var translationView: UIView = {
         let view = UIView()
         view.frame.size = CGSize(width: self.view.frame.width - 75, height: 350)
@@ -372,6 +394,9 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         view.addSubview(copyIcon)
         view.addSubview(speakIcon)
         view.addSubview(checkIcon)
+        view.addSubview(copyTapRegion)
+        view.addSubview(speakTapRegion)
+        view.addSubview(checkTapRegion)
         
         // AutoLayout
         NSLayoutConstraint.activate([
@@ -399,6 +424,21 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
             checkIcon.leadingAnchor.constraint(equalTo: speakIcon.trailingAnchor, constant: 45),
             checkIcon.widthAnchor.constraint(equalToConstant: 20),
             checkIcon.heightAnchor.constraint(equalToConstant: 20),
+            
+            copyTapRegion.topAnchor.constraint(equalTo: separator.bottomAnchor),
+            copyTapRegion.trailingAnchor.constraint(equalTo: speakTapRegion.leadingAnchor),
+            copyTapRegion.widthAnchor.constraint(equalToConstant: 45),
+            copyTapRegion.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            speakTapRegion.topAnchor.constraint(equalTo: separator.bottomAnchor),
+            speakTapRegion.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            speakTapRegion.widthAnchor.constraint(equalToConstant: 45),
+            speakTapRegion.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            checkTapRegion.topAnchor.constraint(equalTo: separator.bottomAnchor),
+            checkTapRegion.leadingAnchor.constraint(equalTo: speakTapRegion.leadingAnchor),
+            checkTapRegion.widthAnchor.constraint(equalToConstant: 45),
+            checkTapRegion.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
         
         return view
@@ -446,6 +486,15 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         
         let textViewGesture = UITapGestureRecognizer(target: self, action: #selector(cancelLanguageChange))
         recordedTextView.addGestureRecognizer(textViewGesture)
+        
+        let copyGesture = UITapGestureRecognizer(target: self, action: #selector(copyTranslation))
+        copyTapRegion.addGestureRecognizer(copyGesture)
+        
+        let speakGesture = UITapGestureRecognizer(target: self, action: #selector(speakTranslation))
+        speakTapRegion.addGestureRecognizer(speakGesture)
+        
+        let checkGesture = UITapGestureRecognizer(target: self, action: #selector(clearTranslation))
+        checkTapRegion.addGestureRecognizer(checkGesture)
     }
     
     // MARK: - ACTIONS
@@ -490,6 +539,21 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
             self.targetLanguageView.transform = .identity
             self.translateIcon.transform = .identity
         }
+    }
+    
+    
+    @objc private func copyTranslation() {
+        
+    }
+    
+    
+    @objc private func speakTranslation() {
+        
+    }
+    
+    
+    @objc private func clearTranslation() {
+        
     }
     
     // MARK: - AUTOLAYOUT
