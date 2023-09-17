@@ -445,17 +445,17 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
             
             copyTapRegion.topAnchor.constraint(equalTo: separator.bottomAnchor),
             copyTapRegion.centerXAnchor.constraint(equalTo: copyIcon.centerXAnchor),
-            copyTapRegion.widthAnchor.constraint(equalToConstant: 45),
+            copyTapRegion.widthAnchor.constraint(equalToConstant: 60),
             copyTapRegion.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             speakTapRegion.topAnchor.constraint(equalTo: separator.bottomAnchor),
             speakTapRegion.centerXAnchor.constraint(equalTo: speakIcon.centerXAnchor),
-            speakTapRegion.widthAnchor.constraint(equalToConstant: 45),
+            speakTapRegion.widthAnchor.constraint(equalToConstant: 60),
             speakTapRegion.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             checkTapRegion.topAnchor.constraint(equalTo: separator.bottomAnchor),
             checkTapRegion.centerXAnchor.constraint(equalTo: checkIcon.centerXAnchor),
-            checkTapRegion.widthAnchor.constraint(equalToConstant: 45),
+            checkTapRegion.widthAnchor.constraint(equalToConstant: 60),
             checkTapRegion.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
         
@@ -568,6 +568,8 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     
     @objc private func copyTranslation() {
         UIPasteboard.general.string = translationTextView.text
+        
+        animateButton(copyIcon, tapRegion: copyTapRegion)
     }
     
     
@@ -581,6 +583,8 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         
         // Start speaking
         speechSynthesizer.speak(speechUtterance)
+        
+        animateButton(speakIcon, tapRegion: speakTapRegion)
     }
     
     
@@ -588,6 +592,21 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         UIView.animate(withDuration: 0.25) {
             self.translationView.frame.origin.y = self.view.frame.height + 15
             self.translationTextView.text = ""
+        }
+        
+        animateButton(checkIcon, tapRegion: checkTapRegion)
+    }
+    
+    
+    private func animateButton(_ imageView: UIImageView, tapRegion: UIView) {
+        UIView.animate(withDuration: 0.1) {
+            imageView.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+            tapRegion.backgroundColor = .systemGray6
+        } completion: { _ in
+            UIView.animate(withDuration: 0.1) {
+                imageView.transform = .identity
+                tapRegion.backgroundColor = .clear
+            }
         }
     }
     
