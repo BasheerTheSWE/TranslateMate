@@ -120,6 +120,29 @@ final class TypeVC: UIViewController {
         return imageView
     }()
     
+    private let scriptPlaceHolder: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        label.font = .systemFont(ofSize: 18, weight: .medium)
+        label.textAlignment = .center
+        label.textColor = .systemGray
+        
+        return label
+    }()
+    
+    private let scriptTextView: UITextView = {
+        let textView = UITextView()
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        
+        textView.font = .systemFont(ofSize: 18, weight: .medium)
+        textView.autocorrectionType = .no
+        textView.autocapitalizationType = .none
+        textView.textAlignment = .center
+        
+        return textView
+    }()
+    
     // MARK: - VDL
     override func viewDidLoad() {
         super.viewDidLoad()
