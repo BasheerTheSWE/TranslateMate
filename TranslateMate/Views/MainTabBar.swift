@@ -235,6 +235,7 @@ final class MainTabBar: UITabBarController {
 
 // MARK: - VOICEAUTHRESULTS EXT
 extension MainTabBar: VoiceRecordingAuthDelegate {
+    
     func setAuthResults(result: Bool) {
         self.isVoiceRecordingAuthorized = result
     }

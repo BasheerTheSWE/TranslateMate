@@ -35,7 +35,6 @@ final class MainVC: UIViewController {
         view.layer.cornerRadius = 50
         
         view.layer.shadowColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
-//        view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOpacity = 0.3
         view.layer.shadowOffset = .zero
         view.layer.shadowRadius = 5
@@ -70,7 +69,6 @@ final class MainVC: UIViewController {
         view.layer.cornerRadius = 50
         
         view.layer.shadowColor = CGColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
-//        view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOpacity = 0.3
         view.layer.shadowOffset = .zero
         view.layer.shadowRadius = 5

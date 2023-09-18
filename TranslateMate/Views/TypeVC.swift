@@ -128,6 +128,7 @@ final class TypeVC: UIViewController {
         configureGestures()
     }
     
+    
     override func viewDidLayoutSubviews() {
         view.addSubview(sourceLanguageView)
         view.addSubview(translateIcon)

@@ -528,6 +528,7 @@ extension VoiceVC: VoiceDelegate {
         }
     }
     
+    
     func stopVoiceRecording() {
         status = .notRecording
         VoiceManager.shared.stopRecording {
