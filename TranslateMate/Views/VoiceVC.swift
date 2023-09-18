@@ -29,176 +29,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     var voiceRecordingAuthDelegate: VoiceRecordingAuthDelegate?
     private var targetLanguageIndex: Int = 0
     
-    private let languages: [[String: String]] = [
-        [
-            "language" : "Arabic",
-            "code": "ar"
-        ],
-        [
-            "language" : "Armenian",
-            "code": "hy"
-        ],
-        [
-            "language" : "Bengali",
-            "code": "bn"
-        ],
-        [
-            "language" : "Chinese",
-            "code": "zh"
-        ],
-        [
-            "language" : "Croatian",
-            "code": "hr"
-        ],
-        [
-            "language" : "Czech",
-            "code": "cs"
-        ],
-        [
-            "language" : "English",
-            "code": "en"
-        ],
-        [
-            "language" : "Estonian",
-            "code": "et"
-        ],
-        [
-            "language" : "French",
-            "code": "fr"
-        ],
-        [
-            "language" : "German",
-            "code": "de"
-        ],
-        [
-            "language" : "Hausa",
-            "code": "ha"
-        ],
-        [
-            "language" : "Hebrew",
-            "code": "he"
-        ],
-        [
-            "language" : "Hindi",
-            "code": "hi"
-        ],
-        [
-            "language" : "Hungarian",
-            "code": "hu"
-        ],
-        [
-            "language" : "Icelandic",
-            "code": "is"
-        ],
-        [
-            "language" : "Indonesian",
-            "code": "id"
-        ],
-        [
-            "language" : "Irish",
-            "code": "ga"
-        ],
-        [
-            "language" : "Italian",
-            "code": "it"
-        ],
-        [
-            "language" : "Japanese",
-            "code": "ja"
-        ],
-        [
-            "language" : "Kongo",
-            "code": "kg"
-        ],
-        [
-            "language" : "Korean",
-            "code": "ko"
-        ],
-        [
-            "language" : "Latin",
-            "code": "la"
-        ],
-        [
-            "language" : "Mongolian",
-            "code": "mn"
-        ],
-        [
-            "language" : "Nepali",
-            "code": "ne"
-        ],
-        [
-            "language" : "Norwegian",
-            "code": "no"
-        ],
-        [
-            "language" : "Persian",
-            "code": "fa"
-        ],
-        [
-            "language" : "Polish",
-            "code": "pl"
-        ],
-        [
-            "language" : "Portuguese",
-            "code": "pt"
-        ],
-        [
-            "language" : "Punjabi",
-            "code": "pa"
-        ],
-        [
-            "language" : "Russian",
-            "code": "ru"
-        ],
-        [
-            "language" : "Sardinian",
-            "code": "sc"
-        ],
-        [
-            "language" : "Serbian",
-            "code": "sr"
-        ],
-        [
-            "language" : "Spanish",
-            "code": "es"
-        ],
-        [
-            "language" : "Swahili",
-            "code": "sw"
-        ],
-        [
-            "language" : "Swedish",
-            "code": "sv"
-        ],
-        [
-            "language" : "Thai",
-            "code": "th"
-        ],
-        [
-            "language" : "Turkish",
-            "code": "tr"
-        ],
-        [
-            "language" : "Ukrainian",
-            "code": "uk"
-        ],
-        [
-            "language" : "Urdu",
-            "code": "ur"
-        ],
-        [
-            "language" : "Vietnamese",
-            "code": "vi"
-        ],
-        [
-            "language" : "Welsh",
-            "code": "cy"
-        ],
-        [
-            "language" : "Sundanese",
-            "code": "su"
-        ],
-    ]
+    private let languages: [Language] = DataManager.shared.getLanguages()
     
     private let recordedTextView: UITextView = {
         let textView = UITextView()
@@ -252,7 +83,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         let field = UITextField()
         field.translatesAutoresizingMaskIntoConstraints = false
         
-        field.text = languages[0]["language"]
+        field.text = languages[0].language
         field.allowsEditingTextAttributes = false
         
         field.inputView = languagePicker
@@ -518,8 +349,9 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     // MARK: - ACTIONS
     private func translate() {
         guard !recordedTextView.text.isEmpty,
-              let text = recordedTextView.text,
-              let target = languages[targetLanguageIndex]["code"] else { return }
+              let text = recordedTextView.text else { return }
+        
+        let target = languages[targetLanguageIndex].code
         
         recordedTextView.text = ""
         
@@ -661,12 +493,12 @@ extension VoiceVC: UIPickerViewDelegate, UIPickerViewDataSource {
     
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return languages[row]["language"]
+        return languages[row].language
     }
     
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        targetLanguageTextField.text = languages[row]["language"]
+        targetLanguageTextField.text = languages[row].language
         targetLanguageIndex = row
         
         cancelLanguageChange()
