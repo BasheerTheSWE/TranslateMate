@@ -13,6 +13,7 @@
 		3A540C552AB46E00009AF9E7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A540C532AB46E00009AF9E7 /* LaunchScreen.storyboard */; };
 		3A540C612AB46E85009AF9E7 /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A540C602AB46E85009AF9E7 /* MainVC.swift */; };
 		3A540C632AB483EB009AF9E7 /* VoiceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A540C622AB483EB009AF9E7 /* VoiceVC.swift */; };
+		3A55E8B82ABB3B04008E8EA1 /* ViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A55E8B72ABB3B04008E8EA1 /* ViewManager.swift */; };
 		3AA2E9372AB56F94007AB9EF /* MainTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA2E9362AB56F94007AB9EF /* MainTabBar.swift */; };
 		3AA2E9392AB5719B007AB9EF /* TypeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA2E9382AB5719B007AB9EF /* TypeVC.swift */; };
 		3AA2E93B2AB59E8C007AB9EF /* VoiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA2E93A2AB59E8C007AB9EF /* VoiceManager.swift */; };
@@ -29,6 +30,7 @@
 		3A540C562AB46E00009AF9E7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3A540C602AB46E85009AF9E7 /* MainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
 		3A540C622AB483EB009AF9E7 /* VoiceVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceVC.swift; sourceTree = "<group>"; };
+		3A55E8B72ABB3B04008E8EA1 /* ViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewManager.swift; sourceTree = "<group>"; };
 		3AA2E9362AB56F94007AB9EF /* MainTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBar.swift; sourceTree = "<group>"; };
 		3AA2E9382AB5719B007AB9EF /* TypeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeVC.swift; sourceTree = "<group>"; };
 		3AA2E93A2AB59E8C007AB9EF /* VoiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceManager.swift; sourceTree = "<group>"; };
@@ -66,7 +68,7 @@
 		3A540C472AB46DFF009AF9E7 /* TranslateMate */ = {
 			isa = PBXGroup;
 			children = (
-				3A540C5F2AB46E70009AF9E7 /* Models */,
+				3A540C5F2AB46E70009AF9E7 /* Managers */,
 				3A540C5E2AB46E64009AF9E7 /* Views */,
 				3A540C5C2AB46E36009AF9E7 /* Delegates */,
 				3A540C5D2AB46E4E009AF9E7 /* Assets&Media */,
@@ -104,14 +106,15 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		3A540C5F2AB46E70009AF9E7 /* Models */ = {
+		3A540C5F2AB46E70009AF9E7 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
 				3AA2E93A2AB59E8C007AB9EF /* VoiceManager.swift */,
 				3AA2E93C2AB5B2D2007AB9EF /* APIManager.swift */,
 				3AA2E9642AB8C5CB007AB9EF /* DataManager.swift */,
+				3A55E8B72ABB3B04008E8EA1 /* ViewManager.swift */,
 			);
-			path = Models;
+			path = Managers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -186,6 +189,7 @@
 			files = (
 				3AA2E93D2AB5B2D2007AB9EF /* APIManager.swift in Sources */,
 				3A540C492AB46DFF009AF9E7 /* AppDelegate.swift in Sources */,
+				3A55E8B82ABB3B04008E8EA1 /* ViewManager.swift in Sources */,
 				3A540C612AB46E85009AF9E7 /* MainVC.swift in Sources */,
 				3A540C4B2AB46DFF009AF9E7 /* SceneDelegate.swift in Sources */,
 				3AA2E9372AB56F94007AB9EF /* MainTabBar.swift in Sources */,

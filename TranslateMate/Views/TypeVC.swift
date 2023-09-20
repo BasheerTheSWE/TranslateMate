@@ -111,7 +111,7 @@ final class TypeVC: UIViewController {
         return view
     }()
     
-    private let translateIcon: UIImageView = {
+    private let translateIconImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "arrow.forward"))
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -131,11 +131,10 @@ final class TypeVC: UIViewController {
         return label
     }()
     
-    private let scriptTextView: UIView = {
+    private let scriptTextView: UITextView = {
         let textView = UITextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
         
-        textView.backgroundColor = .systemRed
         textView.font = .systemFont(ofSize: 18, weight: .medium)
         textView.autocorrectionType = .no
         textView.autocapitalizationType = .none
@@ -144,35 +143,15 @@ final class TypeVC: UIViewController {
         return textView
     }()
     
-    private lazy var scriptView: UIView = {
-        let view = UIView()
-        view.frame.size = CGSize(width: self.view.frame.width - 75, height: 250)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        
-        view.backgroundColor = .systemBackground
-        view.layer.cornerRadius = 8
-        
-        view.layer.shadowColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
-        view.layer.shadowOpacity = 0.5
-        view.layer.shadowOffset = .zero
-        view.layer.shadowRadius = 3
-        
-        view.layer.shadowPath = UIBezierPath(roundedRect: view.bounds, cornerRadius: 8).cgPath
-        
-        return view
-    }()
+    private lazy var copyIcon: UIImageView = ViewManager.shared.getIcon(named: "square.on.square")
+    private lazy var speakIcon: UIImageView = ViewManager.shared.getIcon(named: "speaker.wave.2")
+    private lazy var translateIcon: UIImageView = ViewManager.shared.getIcon(named: "arrow.right.arrow.left")
     
-    private let translateButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        
-        button.configuration = .filled()
-        button.configuration?.title = "Translate"
-        button.configuration?.baseBackgroundColor = .label
-        button.configuration?.baseForegroundColor = .systemBackground
-        
-        return button
-    }()
+    private lazy var copyTapRegion: UIView = ViewManager.shared.getTapRegion()
+    private lazy var speakTapRegion: UIView = ViewManager.shared.getTapRegion()
+    private lazy var translateTapRegion: UIView = ViewManager.shared.getTapRegion()
+    
+    private lazy var scriptView: UIView = ViewManager.shared.getPrimaryView(parentView: self.view, height: 250, textView: scriptTextView, icons: [copyIcon, speakIcon, translateIcon], tapRegions: [copyTapRegion, speakTapRegion, translateTapRegion])
     
     // MARK: - VDL
     override func viewDidLoad() {
@@ -185,11 +164,10 @@ final class TypeVC: UIViewController {
     
     override func viewDidLayoutSubviews() {
         view.addSubview(sourceLanguageView)
-        view.addSubview(translateIcon)
+        view.addSubview(translateIconImageView)
         view.addSubview(targetLanguageView)
         view.addSubview(targetLanguageTapRegion)
         view.addSubview(scriptView)
-        view.addSubview(translateButton)
         
         configureAutoLayout()
     }
@@ -215,7 +193,7 @@ final class TypeVC: UIViewController {
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0, options: [.allowUserInteraction]) {
             self.sourceLanguageView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             self.targetLanguageView.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
-            self.translateIcon.transform = CGAffineTransform(rotationAngle: .pi / 2)
+            self.translateIconImageView.transform = CGAffineTransform(rotationAngle: .pi / 2)
         }
     }
     
@@ -231,7 +209,7 @@ final class TypeVC: UIViewController {
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0, options: [.allowUserInteraction]) {
             self.sourceLanguageView.transform = .identity
             self.targetLanguageView.transform = .identity
-            self.translateIcon.transform = .identity
+            self.translateIconImageView.transform = .identity
         }
     }
     
@@ -239,17 +217,17 @@ final class TypeVC: UIViewController {
     private func configureAutoLayout() {
         NSLayoutConstraint.activate([
             sourceLanguageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 25),
-            sourceLanguageView.trailingAnchor.constraint(equalTo: translateIcon.leadingAnchor, constant: -15),
+            sourceLanguageView.trailingAnchor.constraint(equalTo: translateIconImageView.leadingAnchor, constant: -15),
             sourceLanguageView.widthAnchor.constraint(equalToConstant: 150),
             sourceLanguageView.heightAnchor.constraint(equalToConstant: 50),
             
-            translateIcon.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            translateIcon.centerYAnchor.constraint(equalTo: sourceLanguageView.centerYAnchor),
-            translateIcon.widthAnchor.constraint(equalToConstant: 18),
-            translateIcon.heightAnchor.constraint(equalToConstant: 18),
+            translateIconImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            translateIconImageView.centerYAnchor.constraint(equalTo: sourceLanguageView.centerYAnchor),
+            translateIconImageView.widthAnchor.constraint(equalToConstant: 18),
+            translateIconImageView.heightAnchor.constraint(equalToConstant: 18),
             
             targetLanguageView.topAnchor.constraint(equalTo: sourceLanguageView.topAnchor),
-            targetLanguageView.leadingAnchor.constraint(equalTo: translateIcon.trailingAnchor, constant: 15),
+            targetLanguageView.leadingAnchor.constraint(equalTo: translateIconImageView.trailingAnchor, constant: 15),
             targetLanguageView.widthAnchor.constraint(equalToConstant: 150),
             targetLanguageView.heightAnchor.constraint(equalToConstant: 50),
             
@@ -261,12 +239,7 @@ final class TypeVC: UIViewController {
             scriptView.topAnchor.constraint(equalTo: targetLanguageView.bottomAnchor, constant: 75),
             scriptView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 37.5),
             scriptView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -37.5),
-            scriptView.heightAnchor.constraint(equalToConstant: 250),
-            
-            translateButton.topAnchor.constraint(equalTo: scriptView.bottomAnchor, constant: 75),
-            translateButton.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor, constant: 50),
-            translateButton.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor, constant: -50),
-            translateButton.heightAnchor.constraint(equalToConstant: 50)
+            scriptView.heightAnchor.constraint(equalToConstant: 250)
         ])
     }
 }

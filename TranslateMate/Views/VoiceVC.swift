@@ -164,133 +164,15 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         return textView
     }()
     
-    private let copyIcon: UIImageView = {
-        let imageView = UIImageView(image: UIImage(systemName: "square.on.square"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        
-        imageView.tintColor = .systemGray
-        
-        return imageView
-    }()
+    private let copyIcon: UIImageView = ViewManager.shared.getIcon(named: "square.on.square")
+    private let speakIcon: UIImageView = ViewManager.shared.getIcon(named: "speaker.wave.2")
+    private let checkIcon: UIImageView = ViewManager.shared.getIcon(named: "checkmark.circle")
     
-    private let speakIcon: UIImageView = {
-        let imageView = UIImageView(image: UIImage(systemName: "speaker.wave.2"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        
-        imageView.tintColor = .systemGray
-        
-        return imageView
-    }()
+    private let copyTapRegion: UIView = ViewManager.shared.getTapRegion()
+    private let speakTapRegion: UIView = ViewManager.shared.getTapRegion()
+    private let checkTapRegion: UIView = ViewManager.shared.getTapRegion()
     
-    private let checkIcon: UIImageView = {
-        let imageView = UIImageView(image: UIImage(systemName: "checkmark.circle"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        
-        imageView.tintColor = .systemGray
-        
-        return imageView
-    }()
-    
-    private let copyTapRegion: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        
-        view.isUserInteractionEnabled = true
-        
-        return view
-    }()
-    
-    private let speakTapRegion: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        
-        view.isUserInteractionEnabled = true
-        
-        return view
-    }()
-    
-    private let checkTapRegion: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        
-        view.isUserInteractionEnabled = true
-        
-        return view
-    }()
-    
-    private lazy var translationView: UIView = {
-        let view = UIView()
-        view.frame = CGRect(x: 37.5, y: self.view.frame.height + 15, width: self.view.frame.width - 75, height: 350)
-        
-        view.backgroundColor = .systemBackground
-        view.layer.cornerRadius = 8
-        
-        view.layer.shadowColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
-        view.layer.shadowOpacity = 0.5
-        view.layer.shadowOffset = .zero
-        view.layer.shadowRadius = 3
-        
-        view.layer.shadowPath = UIBezierPath(roundedRect: view.bounds, cornerRadius: 8).cgPath
-        
-        // Components
-        let separator = UIView()
-        separator.translatesAutoresizingMaskIntoConstraints = false
-        separator.backgroundColor = .systemGray3
-        
-        view.addSubview(translationTextView)
-        view.addSubview(separator)
-        view.addSubview(copyIcon)
-        view.addSubview(speakIcon)
-        view.addSubview(checkIcon)
-        view.addSubview(copyTapRegion)
-        view.addSubview(speakTapRegion)
-        view.addSubview(checkTapRegion)
-        
-        // AutoLayout
-        NSLayoutConstraint.activate([
-            translationTextView.topAnchor.constraint(equalTo: view.topAnchor),
-            translationTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
-            translationTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
-            translationTextView.bottomAnchor.constraint(equalTo: separator.topAnchor),
-            
-            separator.heightAnchor.constraint(equalToConstant: 0.5),
-            separator.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            separator.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            separator.bottomAnchor.constraint(equalTo: speakIcon.topAnchor, constant: -15),
-            
-            copyIcon.centerYAnchor.constraint(equalTo: speakIcon.centerYAnchor),
-            copyIcon.trailingAnchor.constraint(equalTo: speakIcon.leadingAnchor, constant: -45),
-            copyIcon.widthAnchor.constraint(equalToConstant: 20),
-            copyIcon.heightAnchor.constraint(equalToConstant: 20),
-            
-            speakIcon.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            speakIcon.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -15),
-            speakIcon.widthAnchor.constraint(equalToConstant: 20),
-            speakIcon.heightAnchor.constraint(equalToConstant: 20),
-            
-            checkIcon.centerYAnchor.constraint(equalTo: speakIcon.centerYAnchor),
-            checkIcon.leadingAnchor.constraint(equalTo: speakIcon.trailingAnchor, constant: 45),
-            checkIcon.widthAnchor.constraint(equalToConstant: 20),
-            checkIcon.heightAnchor.constraint(equalToConstant: 20),
-            
-            copyTapRegion.topAnchor.constraint(equalTo: separator.bottomAnchor),
-            copyTapRegion.centerXAnchor.constraint(equalTo: copyIcon.centerXAnchor),
-            copyTapRegion.widthAnchor.constraint(equalToConstant: 60),
-            copyTapRegion.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            speakTapRegion.topAnchor.constraint(equalTo: separator.bottomAnchor),
-            speakTapRegion.centerXAnchor.constraint(equalTo: speakIcon.centerXAnchor),
-            speakTapRegion.widthAnchor.constraint(equalToConstant: 60),
-            speakTapRegion.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            checkTapRegion.topAnchor.constraint(equalTo: separator.bottomAnchor),
-            checkTapRegion.centerXAnchor.constraint(equalTo: checkIcon.centerXAnchor),
-            checkTapRegion.widthAnchor.constraint(equalToConstant: 60),
-            checkTapRegion.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ])
-        
-        return view
-    }()
+    private lazy var translationView: UIView = ViewManager.shared.getPrimaryView(parentView: self.view, height: 350, textView: translationTextView, icons: [copyIcon, speakIcon, checkIcon], tapRegions: [copyTapRegion, speakTapRegion, checkTapRegion])
     
     
     // MARK: - VDL
@@ -469,10 +351,10 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
             targetLanguageTapRegion.trailingAnchor.constraint(equalTo: targetLanguageView.trailingAnchor),
             targetLanguageTapRegion.bottomAnchor.constraint(equalTo: targetLanguageView.bottomAnchor),
             
-//            translationView.widthAnchor.constraint(equalToConstant: self.view.frame.width - 75),
-//            translationView.heightAnchor.constraint(equalToConstant: 350),
-//            translationView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-////            translationView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -25)
+            translationView.topAnchor.constraint(equalTo: view.bottomAnchor, constant: 15),
+            translationView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 37.5),
+            translationView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -37.5),
+            translationView.heightAnchor.constraint(equalToConstant: 350)
         ])
     }
 }
