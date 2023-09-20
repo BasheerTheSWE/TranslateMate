@@ -43,16 +43,32 @@ final class TypeVC: UIViewController {
         return field
     }()
     
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .insetGrouped)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        
+        tableView.register(TranslationCell.self, forCellReuseIdentifier: TranslationCell.id)
+        
+        tableView.contentInset.bottom = 150
+        tableView.separatorInset = .zero
+        
+        return tableView
+    }()
+    
     // MARK: - VDL
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = tableView.backgroundColor
         
         configureGestures()
     }
     
     
     override func viewDidLayoutSubviews() {
+        view.addSubview(tableView)
         view.addSubview(sourceLanguageView)
         view.addSubview(translateIcon)
         view.addSubview(targetLanguageView)
@@ -63,8 +79,8 @@ final class TypeVC: UIViewController {
     
     
     private func configureGestures() {
-        let viewGesture = UITapGestureRecognizer(target: self, action: #selector(cancelLanguageChange))
-        view.addGestureRecognizer(viewGesture)
+//        let viewGesture = UITapGestureRecognizer(target: self, action: #selector(cancelLanguageChange))
+//        view.addGestureRecognizer(viewGesture)
         
         let targetLanguageGesture = UITapGestureRecognizer(target: self, action: #selector(changeLanguage))
         targetLanguageTapRegion.addGestureRecognizer(targetLanguageGesture)
@@ -105,6 +121,11 @@ final class TypeVC: UIViewController {
     // MARK: - AUTOLAYOUT
     private func configureAutoLayout() {
         NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: sourceLanguageView.bottomAnchor, constant: 5),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
             sourceLanguageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 25),
             sourceLanguageView.trailingAnchor.constraint(equalTo: translateIcon.leadingAnchor, constant: -15),
             sourceLanguageView.widthAnchor.constraint(equalToConstant: 150),
@@ -151,6 +172,26 @@ extension TypeVC: UIPickerViewDelegate, UIPickerViewDataSource {
         targetLanguageTextField.text = languages[row].language
         targetLanguageIndex = row
         
+        cancelLanguageChange()
+    }
+}
+
+
+// MARK: - TABLEVIEW EXT
+extension TypeVC: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 100
+    }
+    
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        return UITableViewCell()
+    }
+    
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         cancelLanguageChange()
     }
 }

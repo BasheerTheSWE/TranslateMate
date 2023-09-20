@@ -36,7 +36,7 @@ final class ViewManager {
         view.frame.size = CGSize(width: parentView.frame.width - 75, height: height)
         view.translatesAutoresizingMaskIntoConstraints = false
         
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .secondarySystemGroupedBackground
         view.layer.cornerRadius = 8
         
         view.layer.shadowColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)

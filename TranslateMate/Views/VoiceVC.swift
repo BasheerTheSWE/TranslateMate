@@ -50,6 +50,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.isEditable = false
         
+        textView.backgroundColor = .clear
         textView.font = .systemFont(ofSize: 25, weight: .medium)
         textView.textAlignment = .center
         
@@ -100,7 +101,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     // MARK: - VDL
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .secondarySystemGroupedBackground
         
         VoiceManager.shared.initiate(delegate: self)
         VoiceManager.shared.requestSpeechAuthorization { status in
