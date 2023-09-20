@@ -42,33 +42,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         return textView
     }()
     
-    private let sourceLanguageView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        
-        view.backgroundColor = .clear
-        
-        view.layer.cornerRadius = 8
-        view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
-        view.layer.borderWidth = 1
-        
-        // Components
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        
-        label.text = "English"
-        label.font = .systemFont(ofSize: 17, weight: .medium)
-        
-        // AutoLayout
-        view.addSubview(label)
-        
-        NSLayoutConstraint.activate([
-            label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
-        ])
-        
-        return view
-    }()
+    private let sourceLanguageView: UIView = ViewManager.shared.getSourceLanguageView()
     
     private lazy var languagePicker: UIPickerView = {
         let picker = UIPickerView()
@@ -97,50 +71,9 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         return field
     }()
     
-    private lazy var targetLanguageView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.isUserInteractionEnabled = true
-        
-        view.backgroundColor = .clear
-        
-        view.layer.cornerRadius = 8
-        view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
-        view.layer.borderWidth = 1
-        
-        // Components
-        let imageView: UIImageView = UIImageView(image: UIImage(systemName: "chevron.down.circle"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.tintColor = .systemGray
-        
-        // AutoLayout
-        view.addSubview(targetLanguageTextField)
-        view.addSubview(imageView)
-        
-        NSLayoutConstraint.activate([
-            targetLanguageTextField.topAnchor.constraint(equalTo: view.topAnchor),
-            targetLanguageTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            targetLanguageTextField.trailingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: -5),
-            targetLanguageTextField.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
-            imageView.widthAnchor.constraint(equalToConstant: 20),
-            imageView.heightAnchor.constraint(equalToConstant: 20)
-        ])
-        
-        return view
-    }()
+    private lazy var targetLanguageView: UIView = ViewManager.shared.getTargetLanguageView(textView: targetLanguageTextField)
     
-    private let targetLanguageTapRegion: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        
-        view.backgroundColor = .clear
-        view.isUserInteractionEnabled = true
-        
-        return view
-    }()
+    private let targetLanguageTapRegion: UIView = ViewManager.shared.getTapRegion()
     
     private let translateIcon: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "arrow.forward"))

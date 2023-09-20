@@ -30,6 +30,7 @@ final class ViewManager {
         return view
     }
     
+    
     func getPrimaryView(parentView: UIView, height: CGFloat, textView: UITextView, icons: [UIImageView], tapRegions: [UIView]) -> UIView {
         let view = UIView()
         view.frame.size = CGSize(width: parentView.frame.width - 75, height: height)
@@ -99,6 +100,71 @@ final class ViewManager {
             tapRegions[2].centerXAnchor.constraint(equalTo: icons[2].centerXAnchor),
             tapRegions[2].widthAnchor.constraint(equalToConstant: 60),
             tapRegions[2].bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
+        
+        return view
+    }
+    
+    
+    func getSourceLanguageView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.backgroundColor = .clear
+        
+        view.layer.cornerRadius = 8
+        view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
+        view.layer.borderWidth = 1
+        
+        // Components
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        label.text = "English"
+        label.font = .systemFont(ofSize: 17, weight: .medium)
+        
+        // AutoLayout
+        view.addSubview(label)
+        
+        NSLayoutConstraint.activate([
+            label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
+        ])
+        
+        return view
+    }
+    
+    
+    func getTargetLanguageView(textView: UITextField) -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isUserInteractionEnabled = true
+        
+        view.backgroundColor = .clear
+        
+        view.layer.cornerRadius = 8
+        view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
+        view.layer.borderWidth = 1
+        
+        // Components
+        let imageView: UIImageView = UIImageView(image: UIImage(systemName: "chevron.down.circle"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.tintColor = .systemGray
+        
+        // AutoLayout
+        view.addSubview(textView)
+        view.addSubview(imageView)
+        
+        NSLayoutConstraint.activate([
+            textView.topAnchor.constraint(equalTo: view.topAnchor),
+            textView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            textView.trailingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: -5),
+            textView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
+            imageView.widthAnchor.constraint(equalToConstant: 20),
+            imageView.heightAnchor.constraint(equalToConstant: 20)
         ])
         
         return view
