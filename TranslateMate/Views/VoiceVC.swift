@@ -154,7 +154,6 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     private let translationTextView: UITextView = {
         let textView = UITextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
-        textView.text = " kan ksc asbc abk cabs ca ckja jbj ascb asjc saj cb sacj asj csa cbs jbc ajsc sbc sjb cjsa cjkbj cjbs kjbc jk cjs ja aj ja  sdj aaaa bjsa bc asj ajb asjbc jk fbe uvbweoiv ubsd vbu siuv bsu vbs dbv akj bvjka bkj ba bc askjb ckjas kjas bva bv ab cjas vbds vbskdjv bsj vbj sdavbj adbkv jdasjvba bk d v aj vb;ak jc aksj vkb;ajsd js cva svbkjasd vbaj d;k vdksa; sad j ja ;j as jasd aj ja vbe;kuvb; kajbv ja vj; abvj asdbjv bsadkv jas va vkd ksj abkjvdsab kjv akjv akjbvkjds bvkeu askv cb;keudbv ;kjsd cvkjas bfkvdsacjdsa "
         
         textView.showsVerticalScrollIndicator = false
         textView.isEditable = false
@@ -356,7 +355,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         recordedTextView.text = ""
         
         UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: [.allowUserInteraction]) {
-            self.translationView.frame.origin.y = self.view.center.y - 175
+            self.translationView.frame.origin.y = self.view.center.y - 200
         }
         
         APIManager.shared.translate(text: text, target: target) { data in

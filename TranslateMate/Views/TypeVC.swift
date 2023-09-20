@@ -131,16 +131,47 @@ final class TypeVC: UIViewController {
         return label
     }()
     
-    private let scriptTextView: UITextView = {
+    private let scriptTextView: UIView = {
         let textView = UITextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
         
+        textView.backgroundColor = .systemRed
         textView.font = .systemFont(ofSize: 18, weight: .medium)
         textView.autocorrectionType = .no
         textView.autocapitalizationType = .none
         textView.textAlignment = .center
         
         return textView
+    }()
+    
+    private lazy var scriptView: UIView = {
+        let view = UIView()
+        view.frame.size = CGSize(width: self.view.frame.width - 75, height: 250)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.backgroundColor = .systemBackground
+        view.layer.cornerRadius = 8
+        
+        view.layer.shadowColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
+        view.layer.shadowOpacity = 0.5
+        view.layer.shadowOffset = .zero
+        view.layer.shadowRadius = 3
+        
+        view.layer.shadowPath = UIBezierPath(roundedRect: view.bounds, cornerRadius: 8).cgPath
+        
+        return view
+    }()
+    
+    private let translateButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        button.configuration = .filled()
+        button.configuration?.title = "Translate"
+        button.configuration?.baseBackgroundColor = .label
+        button.configuration?.baseForegroundColor = .systemBackground
+        
+        return button
     }()
     
     // MARK: - VDL
@@ -157,6 +188,8 @@ final class TypeVC: UIViewController {
         view.addSubview(translateIcon)
         view.addSubview(targetLanguageView)
         view.addSubview(targetLanguageTapRegion)
+        view.addSubview(scriptView)
+        view.addSubview(translateButton)
         
         configureAutoLayout()
     }
@@ -223,7 +256,17 @@ final class TypeVC: UIViewController {
             targetLanguageTapRegion.topAnchor.constraint(equalTo: targetLanguageView.topAnchor),
             targetLanguageTapRegion.leadingAnchor.constraint(equalTo: targetLanguageView.leadingAnchor),
             targetLanguageTapRegion.trailingAnchor.constraint(equalTo: targetLanguageView.trailingAnchor),
-            targetLanguageTapRegion.bottomAnchor.constraint(equalTo: targetLanguageView.bottomAnchor)
+            targetLanguageTapRegion.bottomAnchor.constraint(equalTo: targetLanguageView.bottomAnchor),
+            
+            scriptView.topAnchor.constraint(equalTo: targetLanguageView.bottomAnchor, constant: 75),
+            scriptView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 37.5),
+            scriptView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -37.5),
+            scriptView.heightAnchor.constraint(equalToConstant: 250),
+            
+            translateButton.topAnchor.constraint(equalTo: scriptView.bottomAnchor, constant: 75),
+            translateButton.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor, constant: 50),
+            translateButton.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor, constant: -50),
+            translateButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
 }
