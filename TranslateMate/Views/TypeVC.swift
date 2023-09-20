@@ -11,33 +11,10 @@ final class TypeVC: UIViewController {
     private let languages: [Language] = DataManager.shared.getLanguages()
     private var targetLanguageIndex: Int = 0
     
-    private let sourceLanguageView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        
-        view.backgroundColor = .clear
-        
-        view.layer.cornerRadius = 8
-        view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
-        view.layer.borderWidth = 1
-        
-        // Components
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        
-        label.text = "English"
-        label.font = .systemFont(ofSize: 17, weight: .medium)
-        
-        // AutoLayout
-        view.addSubview(label)
-        
-        NSLayoutConstraint.activate([
-            label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
-        ])
-        
-        return view
-    }()
+    private let targetLanguageTapRegion: UIView = ViewManager.shared.getTapRegion()
+    private let translateIcon: UIImageView = ViewManager.shared.getIcon(named: "arrow.forward", isLabelColored: true)
+    private let sourceLanguageView: UIView = ViewManager.shared.getSourceLanguageView()
+    private lazy var targetLanguageView: UIView = ViewManager.shared.getTargetLanguageView(textView: targetLanguageTextField)
     
     private lazy var languagePicker: UIPickerView = {
         let picker = UIPickerView()
@@ -66,93 +43,6 @@ final class TypeVC: UIViewController {
         return field
     }()
     
-    private lazy var targetLanguageView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.isUserInteractionEnabled = true
-        
-        view.backgroundColor = .clear
-        
-        view.layer.cornerRadius = 8
-        view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
-        view.layer.borderWidth = 1
-        
-        // Components
-        let imageView: UIImageView = UIImageView(image: UIImage(systemName: "chevron.down.circle"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.tintColor = .systemGray
-        
-        // AutoLayout
-        view.addSubview(targetLanguageTextField)
-        view.addSubview(imageView)
-        
-        NSLayoutConstraint.activate([
-            targetLanguageTextField.topAnchor.constraint(equalTo: view.topAnchor),
-            targetLanguageTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            targetLanguageTextField.trailingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: -5),
-            targetLanguageTextField.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
-            imageView.widthAnchor.constraint(equalToConstant: 20),
-            imageView.heightAnchor.constraint(equalToConstant: 20)
-        ])
-        
-        return view
-    }()
-    
-    private let targetLanguageTapRegion: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        
-        view.backgroundColor = .clear
-        view.isUserInteractionEnabled = true
-        
-        return view
-    }()
-    
-    private let translateIconImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(systemName: "arrow.forward"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        
-        imageView.tintColor = .label
-        
-        return imageView
-    }()
-    
-    private let scriptPlaceHolder: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        
-        label.font = .systemFont(ofSize: 18, weight: .medium)
-        label.textAlignment = .center
-        label.textColor = .systemGray
-        
-        return label
-    }()
-    
-    private let scriptTextView: UITextView = {
-        let textView = UITextView()
-        textView.translatesAutoresizingMaskIntoConstraints = false
-        
-        textView.font = .systemFont(ofSize: 18, weight: .medium)
-        textView.autocorrectionType = .no
-        textView.autocapitalizationType = .none
-        textView.textAlignment = .center
-        
-        return textView
-    }()
-    
-    private lazy var copyIcon: UIImageView = ViewManager.shared.getIcon(named: "square.on.square")
-    private lazy var speakIcon: UIImageView = ViewManager.shared.getIcon(named: "speaker.wave.2")
-    private lazy var translateIcon: UIImageView = ViewManager.shared.getIcon(named: "arrow.right.arrow.left")
-    
-    private lazy var copyTapRegion: UIView = ViewManager.shared.getTapRegion()
-    private lazy var speakTapRegion: UIView = ViewManager.shared.getTapRegion()
-    private lazy var translateTapRegion: UIView = ViewManager.shared.getTapRegion()
-    
-    private lazy var scriptView: UIView = ViewManager.shared.getPrimaryView(parentView: self.view, height: 250, textView: scriptTextView, icons: [copyIcon, speakIcon, translateIcon], tapRegions: [copyTapRegion, speakTapRegion, translateTapRegion])
-    
     // MARK: - VDL
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -164,10 +54,9 @@ final class TypeVC: UIViewController {
     
     override func viewDidLayoutSubviews() {
         view.addSubview(sourceLanguageView)
-        view.addSubview(translateIconImageView)
+        view.addSubview(translateIcon)
         view.addSubview(targetLanguageView)
         view.addSubview(targetLanguageTapRegion)
-        view.addSubview(scriptView)
         
         configureAutoLayout()
     }
@@ -193,7 +82,7 @@ final class TypeVC: UIViewController {
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0, options: [.allowUserInteraction]) {
             self.sourceLanguageView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             self.targetLanguageView.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
-            self.translateIconImageView.transform = CGAffineTransform(rotationAngle: .pi / 2)
+            self.translateIcon.transform = CGAffineTransform(rotationAngle: .pi / 2)
         }
     }
     
@@ -209,7 +98,7 @@ final class TypeVC: UIViewController {
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0, options: [.allowUserInteraction]) {
             self.sourceLanguageView.transform = .identity
             self.targetLanguageView.transform = .identity
-            self.translateIconImageView.transform = .identity
+            self.translateIcon.transform = .identity
         }
     }
     
@@ -217,29 +106,24 @@ final class TypeVC: UIViewController {
     private func configureAutoLayout() {
         NSLayoutConstraint.activate([
             sourceLanguageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 25),
-            sourceLanguageView.trailingAnchor.constraint(equalTo: translateIconImageView.leadingAnchor, constant: -15),
+            sourceLanguageView.trailingAnchor.constraint(equalTo: translateIcon.leadingAnchor, constant: -15),
             sourceLanguageView.widthAnchor.constraint(equalToConstant: 150),
             sourceLanguageView.heightAnchor.constraint(equalToConstant: 50),
             
-            translateIconImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            translateIconImageView.centerYAnchor.constraint(equalTo: sourceLanguageView.centerYAnchor),
-            translateIconImageView.widthAnchor.constraint(equalToConstant: 18),
-            translateIconImageView.heightAnchor.constraint(equalToConstant: 18),
+            translateIcon.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            translateIcon.centerYAnchor.constraint(equalTo: sourceLanguageView.centerYAnchor),
+            translateIcon.widthAnchor.constraint(equalToConstant: 18),
+            translateIcon.heightAnchor.constraint(equalToConstant: 18),
             
             targetLanguageView.topAnchor.constraint(equalTo: sourceLanguageView.topAnchor),
-            targetLanguageView.leadingAnchor.constraint(equalTo: translateIconImageView.trailingAnchor, constant: 15),
+            targetLanguageView.leadingAnchor.constraint(equalTo: translateIcon.trailingAnchor, constant: 15),
             targetLanguageView.widthAnchor.constraint(equalToConstant: 150),
             targetLanguageView.heightAnchor.constraint(equalToConstant: 50),
             
             targetLanguageTapRegion.topAnchor.constraint(equalTo: targetLanguageView.topAnchor),
             targetLanguageTapRegion.leadingAnchor.constraint(equalTo: targetLanguageView.leadingAnchor),
             targetLanguageTapRegion.trailingAnchor.constraint(equalTo: targetLanguageView.trailingAnchor),
-            targetLanguageTapRegion.bottomAnchor.constraint(equalTo: targetLanguageView.bottomAnchor),
-            
-            scriptView.topAnchor.constraint(equalTo: targetLanguageView.bottomAnchor, constant: 75),
-            scriptView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 37.5),
-            scriptView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -37.5),
-            scriptView.heightAnchor.constraint(equalToConstant: 250)
+            targetLanguageTapRegion.bottomAnchor.constraint(equalTo: targetLanguageView.bottomAnchor)
         ])
     }
 }

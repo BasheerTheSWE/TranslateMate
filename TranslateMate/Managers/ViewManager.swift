@@ -10,11 +10,11 @@ import UIKit
 final class ViewManager {
     static let shared = ViewManager()
     
-    func getIcon(named imageName: String) -> UIImageView {
+    func getIcon(named imageName: String, isLabelColored: Bool = false) -> UIImageView {
         let imageView = UIImageView(image: UIImage(systemName: imageName))
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
-        imageView.tintColor = .systemGray
+        imageView.tintColor = isLabelColored ? .label : .systemGray
         
         return imageView
     }

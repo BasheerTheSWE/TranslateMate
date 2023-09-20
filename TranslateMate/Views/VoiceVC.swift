@@ -24,12 +24,26 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     }
     
     private var status: Status = .notRecording
-    
-    
     var voiceRecordingAuthDelegate: VoiceRecordingAuthDelegate?
     private var targetLanguageIndex: Int = 0
-    
     private let languages: [Language] = DataManager.shared.getLanguages()
+    
+    private lazy var targetLanguageView: UIView = ViewManager.shared.getTargetLanguageView(textView: targetLanguageTextField)
+    private let sourceLanguageView: UIView = ViewManager.shared.getSourceLanguageView()
+    
+    private let targetLanguageTapRegion: UIView = ViewManager.shared.getTapRegion()
+    
+    private let translateIcon: UIImageView = ViewManager.shared.getIcon(named: "arrow.forward", isLabelColored: true)
+    private let copyIcon: UIImageView = ViewManager.shared.getIcon(named: "square.on.square")
+    private let speakIcon: UIImageView = ViewManager.shared.getIcon(named: "speaker.wave.2")
+    private let checkIcon: UIImageView = ViewManager.shared.getIcon(named: "checkmark.circle")
+    
+    private let copyTapRegion: UIView = ViewManager.shared.getTapRegion()
+    private let speakTapRegion: UIView = ViewManager.shared.getTapRegion()
+    private let checkTapRegion: UIView = ViewManager.shared.getTapRegion()
+    
+    
+    private lazy var translationView: UIView = ViewManager.shared.getPrimaryView(parentView: self.view, height: 350, textView: translationTextView, icons: [copyIcon, speakIcon, checkIcon], tapRegions: [copyTapRegion, speakTapRegion, checkTapRegion])
     
     private let recordedTextView: UITextView = {
         let textView = UITextView()
@@ -41,8 +55,6 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         
         return textView
     }()
-    
-    private let sourceLanguageView: UIView = ViewManager.shared.getSourceLanguageView()
     
     private lazy var languagePicker: UIPickerView = {
         let picker = UIPickerView()
@@ -71,19 +83,6 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         return field
     }()
     
-    private lazy var targetLanguageView: UIView = ViewManager.shared.getTargetLanguageView(textView: targetLanguageTextField)
-    
-    private let targetLanguageTapRegion: UIView = ViewManager.shared.getTapRegion()
-    
-    private let translateIcon: UIImageView = {
-        let imageView = UIImageView(image: UIImage(systemName: "arrow.forward"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        
-        imageView.tintColor = .label
-        
-        return imageView
-    }()
-    
     private let translationTextView: UITextView = {
         let textView = UITextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
@@ -96,16 +95,6 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         
         return textView
     }()
-    
-    private let copyIcon: UIImageView = ViewManager.shared.getIcon(named: "square.on.square")
-    private let speakIcon: UIImageView = ViewManager.shared.getIcon(named: "speaker.wave.2")
-    private let checkIcon: UIImageView = ViewManager.shared.getIcon(named: "checkmark.circle")
-    
-    private let copyTapRegion: UIView = ViewManager.shared.getTapRegion()
-    private let speakTapRegion: UIView = ViewManager.shared.getTapRegion()
-    private let checkTapRegion: UIView = ViewManager.shared.getTapRegion()
-    
-    private lazy var translationView: UIView = ViewManager.shared.getPrimaryView(parentView: self.view, height: 350, textView: translationTextView, icons: [copyIcon, speakIcon, checkIcon], tapRegions: [copyTapRegion, speakTapRegion, checkTapRegion])
     
     
     // MARK: - VDL
