@@ -53,7 +53,7 @@ final class TypeVC: UIViewController {
         tableView.register(TranslationCell.self, forCellReuseIdentifier: TranslationCell.id)
         
         tableView.contentInset.bottom = 150
-        tableView.separatorInset = .zero
+        tableView.separatorStyle = .none
         
         return tableView
     }()
@@ -186,7 +186,9 @@ extension TypeVC: UITableViewDelegate, UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: TranslationCell.id, for: indexPath) as? TranslationCell else { fatalError() }
+        
+        return cell
     }
     
     
