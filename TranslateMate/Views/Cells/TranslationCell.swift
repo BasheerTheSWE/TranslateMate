@@ -12,29 +12,34 @@ final class TranslationCell: UITableViewCell {
     
     private lazy var container: UIView = {
         let view = UIView()
-        view.frame.size = CGSize(width: container.frame.width, height: container.frame.height)
         view.translatesAutoresizingMaskIntoConstraints = false
         
         view.backgroundColor = .secondarySystemGroupedBackground
-        view.layer.cornerRadius = 12
-        
-        // Shadows
-        view.layer.shadowColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
-        view.layer.shadowOpacity = 0.5
-        view.layer.shadowOffset = .zero
-        view.layer.shadowRadius = 3
-        
-        view.layer.shadowPath = UIBezierPath(roundedRect: view.bounds, cornerRadius: 12).cgPath
+        view.layer.cornerRadius = 8
+        view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.2)
+        view.layer.borderWidth = 1
         
         // Components
         view.addSubview(targetLanguageTitle)
+        view.addSubview(copyIcon)
+        view.addSubview(copyTapRegion)
         view.addSubview(translationLabel)
         view.addSubview(separator)
         view.addSubview(sourceLabel)
-        
+                
         NSLayoutConstraint.activate([
             targetLanguageTitle.topAnchor.constraint(equalTo: view.topAnchor, constant: 15),
             targetLanguageTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
+            
+            copyIcon.centerYAnchor.constraint(equalTo: targetLanguageTitle.centerYAnchor),
+            copyIcon.trailingAnchor.constraint(equalTo: sourceLabel.trailingAnchor, constant: -8),
+            copyIcon.widthAnchor.constraint(equalToConstant: 14),
+            copyIcon.heightAnchor.constraint(equalToConstant: 14),
+            
+            copyTapRegion.topAnchor.constraint(equalTo: view.topAnchor),
+            copyTapRegion.leadingAnchor.constraint(equalTo: copyIcon.leadingAnchor, constant: -15),
+            copyTapRegion.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            copyTapRegion.bottomAnchor.constraint(equalTo: translationLabel.topAnchor),
             
             translationLabel.topAnchor.constraint(equalTo: targetLanguageTitle.bottomAnchor, constant: 8),
             translationLabel.leadingAnchor.constraint(equalTo: targetLanguageTitle.leadingAnchor),
@@ -66,12 +71,16 @@ final class TranslationCell: UITableViewCell {
         return label
     }()
     
+    private let copyIcon: UIImageView = ViewManager.shared.getIcon(named: "square.on.square", isLabelColored: true)
+    private let copyTapRegion: UIView = ViewManager.shared.getTapRegion()
+    
     private let translationLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "hello my friend my name is basheer and I am an iOS engineer who is currently working on an app called Avatalk"
         
         label.font = .systemFont(ofSize: 14)
+        label.isUserInteractionEnabled = true
         label.numberOfLines = 0
         
         return label
@@ -101,15 +110,28 @@ final class TranslationCell: UITableViewCell {
     // MARK: - INIT
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        contentView.isUserInteractionEnabled = true
         backgroundColor = .clear
         selectionStyle = .none
         
+        configureGestures()
         configureSubviews()
     }
     
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    private func configureGestures() {
+        let copyGesture = UITapGestureRecognizer(target: self, action: #selector(copyTranslation))
+        copyTapRegion.addGestureRecognizer(copyGesture)
+    }
+    
+    // MARK: - ACTIONS
+    @objc private func copyTranslation() {
+        UIPasteboard.general.string = translationLabel.text
     }
     
     // MARK: - SUBVIEWS
