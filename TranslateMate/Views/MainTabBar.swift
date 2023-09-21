@@ -12,6 +12,10 @@ protocol VoiceDelegate {
     func stopVoiceRecording()
 }
 
+protocol TypeDelegate {
+    func startTyping()
+}
+
 final class MainTabBar: UITabBarController {
     enum Status {
         case isRecording
@@ -19,8 +23,9 @@ final class MainTabBar: UITabBarController {
     }
     
     var voiceDelegate: VoiceDelegate?
-    private var isVoiceRecordingAuthorized: Bool = false
+    var typeDelegate: TypeDelegate?
     
+    private var isVoiceRecordingAuthorized: Bool = false
     private var recordingStatus: Status = .notRecording
     
     private lazy var voiceButtonView: UIView = {
@@ -107,6 +112,8 @@ final class MainTabBar: UITabBarController {
         voiceVC.setTabBar(controller: self)
         voiceVC.voiceRecordingAuthDelegate = self
         
+        typeVC.setTabBar(controller: self)
+        
         viewControllers = [
             voiceVC,
             typeVC
@@ -184,6 +191,10 @@ final class MainTabBar: UITabBarController {
     
     @objc private func activateTypeMode() {
         guard recordingStatus == .notRecording else { return }
+        
+        if selectedIndex == 1 {
+            typeDelegate?.startTyping()
+        }
         
         selectedIndex = 1
         

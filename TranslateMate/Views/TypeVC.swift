@@ -43,6 +43,37 @@ final class TypeVC: UIViewController {
         return field
     }()
     
+    private let textViewContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.backgroundColor = UITableView(frame: .zero, style: .insetGrouped).backgroundColor
+        view.alpha = 0
+        
+        return view
+    }()
+    
+    private lazy var textView: UITextView = {
+        let textView = UITextView()
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        
+        textView.delegate = self
+        
+        textView.backgroundColor = .secondarySystemGroupedBackground
+        textView.font = .systemFont(ofSize: 16)
+        textView.layer.cornerRadius = 8
+        textView.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.2)
+        textView.layer.borderWidth = 1
+        
+        textView.alpha = 0
+        textView.isUserInteractionEnabled = false
+        textView.returnKeyType = .go
+        textView.autocorrectionType = .no
+        textView.autocapitalizationType = .none
+        
+        return textView
+    }()
+    
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -51,7 +82,9 @@ final class TypeVC: UIViewController {
         tableView.dataSource = self
         
         tableView.register(TranslationCell.self, forCellReuseIdentifier: TranslationCell.id)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
+        tableView.keyboardDismissMode = .onDrag
         tableView.contentInset.bottom = 150
         tableView.separatorStyle = .none
         
@@ -63,12 +96,16 @@ final class TypeVC: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = tableView.backgroundColor
         
+        NotificationCenter.default.addObserver(self, selector: #selector(inputViewDismissed), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
         configureGestures()
     }
     
     
     override func viewDidLayoutSubviews() {
         view.addSubview(tableView)
+        view.addSubview(textViewContainer)
+        view.addSubview(textView)
         view.addSubview(sourceLanguageView)
         view.addSubview(translateIcon)
         view.addSubview(targetLanguageView)
@@ -84,6 +121,12 @@ final class TypeVC: UIViewController {
         
         let targetLanguageGesture = UITapGestureRecognizer(target: self, action: #selector(changeLanguage))
         targetLanguageTapRegion.addGestureRecognizer(targetLanguageGesture)
+    }
+    
+    
+    func setTabBar(controller: UITabBarController) {
+        guard let controller = controller as? MainTabBar else { fatalError() }
+        controller.typeDelegate = self
     }
     
     // MARK: - ACTIONS
@@ -104,6 +147,10 @@ final class TypeVC: UIViewController {
     
     
     @objc private func cancelLanguageChange() {
+        if textView.isUserInteractionEnabled {
+            textView.becomeFirstResponder()
+        }
+        
         targetLanguageTextField.resignFirstResponder()
         
         UIView.animate(withDuration: 0.2) {
@@ -116,6 +163,58 @@ final class TypeVC: UIViewController {
             self.targetLanguageView.transform = .identity
             self.translateIcon.transform = .identity
         }
+    }
+    
+    
+    private func startTranslation() {
+        textView.isUserInteractionEnabled = true
+        textView.becomeFirstResponder()
+        
+        UIView.animate(withDuration: 0.2) {
+            self.textView.alpha = 1
+            self.textViewContainer.alpha = 1
+        }
+        
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0, options: [.allowUserInteraction]) {
+            self.textView.transform = CGAffineTransform(translationX: 0, y: 60)
+            self.textViewContainer.transform  = CGAffineTransform(translationX: 0, y: 60)
+            self.tableView.transform = CGAffineTransform(translationX: 0, y: 75)
+        }
+    }
+    
+    
+    private func endTranslation() {
+        textView.isUserInteractionEnabled = false
+        textView.resignFirstResponder()
+        
+        UIView.animate(withDuration: 0.2) {
+            self.textView.alpha = 0
+            self.textViewContainer.alpha = 0
+        }
+        
+        UIView.animate(withDuration: 0.5) {
+            self.textView.transform = .identity
+            self.textViewContainer.transform  = .identity
+            self.tableView.transform = .identity
+        }
+    }
+    
+    
+    @objc private func inputViewDismissed() {
+        endTranslation()
+        cancelLanguageChange()
+    }
+    
+    
+    private func clearHistory() {
+        let alert = UIAlertController(title: "Clear History", message: "Are you sure you want to clear your translation history? This action cannot be undone.", preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
+            print("hello world")
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .destructive))
+        
+        present(alert, animated: true)
     }
     
     // MARK: - AUTOLAYOUT
@@ -144,7 +243,17 @@ final class TypeVC: UIViewController {
             targetLanguageTapRegion.topAnchor.constraint(equalTo: targetLanguageView.topAnchor),
             targetLanguageTapRegion.leadingAnchor.constraint(equalTo: targetLanguageView.leadingAnchor),
             targetLanguageTapRegion.trailingAnchor.constraint(equalTo: targetLanguageView.trailingAnchor),
-            targetLanguageTapRegion.bottomAnchor.constraint(equalTo: targetLanguageView.bottomAnchor)
+            targetLanguageTapRegion.bottomAnchor.constraint(equalTo: targetLanguageView.bottomAnchor),
+            
+            textViewContainer.topAnchor.constraint(equalTo: textView.topAnchor),
+            textViewContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            textViewContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            textViewContainer.bottomAnchor.constraint(equalTo: textView.bottomAnchor, constant: 8),
+            
+            textView.topAnchor.constraint(equalTo: targetLanguageView.topAnchor),
+            textView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
+            textView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
+            textView.heightAnchor.constraint(equalToConstant: 90),
         ])
     }
 }
@@ -180,20 +289,73 @@ extension TypeVC: UIPickerViewDelegate, UIPickerViewDataSource {
 // MARK: - TABLEVIEW EXT
 extension TypeVC: UITableViewDelegate, UITableViewDataSource {
     
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 100
+        return section == 1 ? 1 : 20
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: TranslationCell.id, for: indexPath) as? TranslationCell else { fatalError() }
-        
-        return cell
+        switch indexPath.section {
+        case 0:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: TranslationCell.id, for: indexPath) as? TranslationCell else { fatalError() }
+            
+            return cell
+            
+        case 1:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+            
+            var info = cell.defaultContentConfiguration()
+            info.text = "Clear History"
+            info.textProperties.color = .systemBackground
+            info.textProperties.alignment = .center
+            info.textProperties.font = .systemFont(ofSize: 15, weight: .medium)
+            info.image = UIImage(systemName: "trash")
+            info.imageProperties.tintColor = .systemBackground
+            
+            cell.contentConfiguration = info
+            cell.backgroundColor = .label
+            
+            return cell
+            
+        default:
+            return UITableViewCell()
+        }
     }
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        if indexPath.section == 1 {
+            clearHistory()
+        }
         cancelLanguageChange()
+        endTranslation()
+    }
+}
+
+
+// MARK: - TEXTVIEW EXT
+extension TypeVC: UITextViewDelegate {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if text == "\n" {
+            endTranslation()
+            return false
+        }
+        
+        return true
+    }
+}
+
+
+// MARK: - TYPE DELEGATE
+extension TypeVC: TypeDelegate {
+    func startTyping() {
+        startTranslation()
     }
 }

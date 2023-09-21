@@ -64,7 +64,7 @@ final class TranslationCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "English"
         
-        label.font = .systemFont(ofSize: 16, weight: .medium)
+        label.font = .systemFont(ofSize: 16, weight: .bold)
         label.textColor = .link
         label.numberOfLines = 0
         
@@ -131,6 +131,7 @@ final class TranslationCell: UITableViewCell {
     
     // MARK: - ACTIONS
     @objc private func copyTranslation() {
+        ViewManager.shared.animateIcon(icon: copyIcon, tapRegion: copyTapRegion)
         UIPasteboard.general.string = translationLabel.text
     }
     

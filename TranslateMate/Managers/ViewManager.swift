@@ -31,20 +31,35 @@ final class ViewManager {
     }
     
     
+    func animateIcon(icon imageView: UIImageView, tapRegion: UIView) {
+        UIView.animate(withDuration: 0.1) {
+            imageView.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+            tapRegion.backgroundColor = .systemGray6
+        } completion: { _ in
+            UIView.animate(withDuration: 0.1) {
+                imageView.transform = .identity
+                tapRegion.backgroundColor = .clear
+            }
+        }
+    }
+    
+    
     func getPrimaryView(parentView: UIView, height: CGFloat, textView: UITextView, icons: [UIImageView], tapRegions: [UIView]) -> UIView {
         let view = UIView()
         view.frame.size = CGSize(width: parentView.frame.width - 75, height: height)
         view.translatesAutoresizingMaskIntoConstraints = false
         
-        view.backgroundColor = .secondarySystemGroupedBackground
+        view.backgroundColor = UITableView(frame: .zero, style: .insetGrouped).backgroundColor
         view.layer.cornerRadius = 8
+        view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.2)
+        view.layer.borderWidth = 1
         
-        view.layer.shadowColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
-        view.layer.shadowOpacity = 0.5
-        view.layer.shadowOffset = .zero
-        view.layer.shadowRadius = 3
-        
-        view.layer.shadowPath = UIBezierPath(roundedRect: view.bounds, cornerRadius: 8).cgPath
+//        view.layer.shadowColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
+//        view.layer.shadowOpacity = 0.5
+//        view.layer.shadowOffset = .zero
+//        view.layer.shadowRadius = 3
+//
+//        view.layer.shadowPath = UIBezierPath(roundedRect: view.bounds, cornerRadius: 8).cgPath
         
         // Components
         let separator = UIView()
