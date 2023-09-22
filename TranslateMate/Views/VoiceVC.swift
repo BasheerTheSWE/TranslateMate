@@ -484,7 +484,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
 
         // Configure the speech utterance as needed
         speechUtterance.rate = AVSpeechUtteranceDefaultSpeechRate // Adjust speech rate
-        speechUtterance.voice = AVSpeechSynthesisVoice(language: "en-US") // Specify the desired language
+        speechUtterance.voice = AVSpeechSynthesisVoice(language: languages[targetLanguageIndex].language) // Specify the desired language
 
         // Start speaking
         speechSynthesizer.speak(speechUtterance)
