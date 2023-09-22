@@ -28,12 +28,11 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     private var targetLanguageIndex: Int = 0
     private let languages: [Language] = DataManager.shared.getLanguages()
     
-    private lazy var targetLanguageView: UIView = ViewManager.shared.getTargetLanguageView(textView: targetLanguageTextField)
-    private let sourceLanguageView: UIView = ViewManager.shared.getSourceLanguageView()
     
+    // MARK: - VIEWS
     private let targetLanguageTapRegion: UIView = ViewManager.shared.getTapRegion()
-    
     private let translateIcon: UIImageView = ViewManager.shared.getIcon(named: "arrow.forward", tintColor: .label)
+    
     private let copyIcon: UIImageView = ViewManager.shared.getIcon(named: "square.on.square", tintColor: .link)
     private let speakIcon: UIImageView = ViewManager.shared.getIcon(named: "waveform.and.mic", tintColor: .link)
     private let hideIcon: UIImageView = ViewManager.shared.getIcon(named: "eye.slash", tintColor: .link)
@@ -41,6 +40,70 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     private let copyTapRegion: UIView = ViewManager.shared.getTapRegion()
     private let speakTapRegion: UIView = ViewManager.shared.getTapRegion()
     private let hideTapRegion: UIView = ViewManager.shared.getTapRegion()
+    
+    
+    private lazy var targetLanguageView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isUserInteractionEnabled = true
+        
+        view.backgroundColor = .clear
+        
+        view.layer.cornerRadius = 8
+        view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
+        view.layer.borderWidth = 1
+        
+        // Components
+        let imageView: UIImageView = UIImageView(image: UIImage(systemName: "chevron.down.circle"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.tintColor = .systemGray
+        
+        // AutoLayout
+        view.addSubview(targetLanguageTextField)
+        view.addSubview(imageView)
+        
+        NSLayoutConstraint.activate([
+            targetLanguageTextField.topAnchor.constraint(equalTo: view.topAnchor),
+            targetLanguageTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            targetLanguageTextField.trailingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: -5),
+            targetLanguageTextField.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
+            imageView.widthAnchor.constraint(equalToConstant: 20),
+            imageView.heightAnchor.constraint(equalToConstant: 20)
+        ])
+        
+        return view
+    }()
+    
+    private let sourceLanguageView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.backgroundColor = .clear
+        
+        view.layer.cornerRadius = 8
+        view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
+        view.layer.borderWidth = 1
+        
+        // Components
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        label.text = "English"
+        label.font = .systemFont(ofSize: 17, weight: .medium)
+        
+        // AutoLayout
+        view.addSubview(label)
+        
+        NSLayoutConstraint.activate([
+            label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
+        ])
+        
+        return view
+    }()
     
     private let recordedTextView: UITextView = {
         let textView = UITextView()
@@ -246,6 +309,35 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         return view
     }()
     
+    private lazy var translationView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.alpha = 0
+        
+        // Components
+        view.addSubview(translationContainerTitleView)
+        view.addSubview(translationContainer)
+        view.addSubview(translationActionsContainer)
+        
+        NSLayoutConstraint.activate([
+            translationContainerTitleView.topAnchor.constraint(equalTo: view.topAnchor),
+            translationContainerTitleView.leadingAnchor.constraint(equalTo: translationContainer.leadingAnchor, constant: 15),
+            translationContainerTitleView.trailingAnchor.constraint(equalTo: translationContainer.trailingAnchor),
+            
+            translationContainer.topAnchor.constraint(equalTo: translationContainerTitleView.bottomAnchor),
+            translationContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            translationContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            translationActionsContainer.topAnchor.constraint(equalTo: translationContainer.bottomAnchor, constant: 30),
+            translationActionsContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            translationActionsContainer.heightAnchor.constraint(equalToConstant: 40),
+            translationActionsContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        
+        return view
+    }()
+    
     private let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
         indicator.translatesAutoresizingMaskIntoConstraints = false
@@ -276,11 +368,8 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         view.addSubview(translateIcon)
         view.addSubview(targetLanguageView)
         view.addSubview(targetLanguageTapRegion)
-//        view.addSubview(translationView)
-        view.addSubview(translationContainerTitleView)
-        view.addSubview(translationContainer)
+        view.addSubview(translationView)
         view.addSubview(activityIndicator)
-        view.addSubview(translationActionsContainer)
         
         configureAutoLayout()
     }
@@ -308,8 +397,8 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         let speakGesture = UITapGestureRecognizer(target: self, action: #selector(speakTranslation))
         speakTapRegion.addGestureRecognizer(speakGesture)
         
-        let checkGesture = UITapGestureRecognizer(target: self, action: #selector(clearTranslation))
-        hideTapRegion.addGestureRecognizer(checkGesture)
+        let hideGesture = UITapGestureRecognizer(target: self, action: #selector(hideTranslationView))
+        hideTapRegion.addGestureRecognizer(hideGesture)
     }
     
     // MARK: - ACTIONS
@@ -338,8 +427,11 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         if let responses = try? JSONDecoder.decode(Response.self, from: JSON) {
             guard let text = responses.matches.first?.translation as? String else { return }
             DispatchQueue.main.async {
+                self.translationContainerTargetLanguageLabel.text = self.languages[self.targetLanguageIndex].language
+                self.translationLabel.text = text
+                self.sourceLabel.text = self.recordedTextView.text
+                
                 self.showTranslationResults()
-//                self.translationTextView.text = text
             }
         }
     }
@@ -378,33 +470,31 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     
     
     @objc private func copyTranslation() {
-//        UIPasteboard.general.string = translationTextView.text
+        guard let text = translationLabel.text else { return }
+        UIPasteboard.general.string = text
         
         ViewManager.shared.animateIcon(icon: copyIcon, tapRegion: copyTapRegion)
     }
     
     
     @objc private func speakTranslation() {
-//        let speechSynthesizer = AVSpeechSynthesizer()
-//        let speechUtterance = AVSpeechUtterance(string: translationTextView.text)
-//
-//        // Configure the speech utterance as needed
-//        speechUtterance.rate = AVSpeechUtteranceDefaultSpeechRate // Adjust speech rate
-//        speechUtterance.voice = AVSpeechSynthesisVoice(language: "en-US") // Specify the desired language
-//
-//        // Start speaking
-//        speechSynthesizer.speak(speechUtterance)
+        guard let text = translationLabel.text else { return }
+        let speechSynthesizer = AVSpeechSynthesizer()
+        let speechUtterance = AVSpeechUtterance(string: text)
+
+        // Configure the speech utterance as needed
+        speechUtterance.rate = AVSpeechUtteranceDefaultSpeechRate // Adjust speech rate
+        speechUtterance.voice = AVSpeechSynthesisVoice(language: "en-US") // Specify the desired language
+
+        // Start speaking
+        speechSynthesizer.speak(speechUtterance)
         
         ViewManager.shared.animateIcon(icon: speakIcon, tapRegion: speakTapRegion)
     }
     
     
-    @objc private func clearTranslation() {
-        UIView.animate(withDuration: 0.25) {
-//            self.translationView.frame.origin.y = self.view.frame.height + 15
-//            self.translationTextView.text = ""
-        }
-        
+    @objc private func hideTranslationView() {
+        clearWindowToRecord()
         ViewManager.shared.animateIcon(icon: hideIcon, tapRegion: hideTapRegion)
     }
     
@@ -425,8 +515,12 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     private func showTranslationResults() {
         endTranslationPreparations()
         
-        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: [.allowUserInteraction]) {
-//            self.translationView.frame.origin.y = self.view.center.y - 200
+        UIView.animate(withDuration: 0.5) {
+            self.translationView.alpha = 1
+        }
+
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: [.allowUserInteraction]) {
+            self.translationView.transform = CGAffineTransform(translationX: 0, y: -(3 * self.view.frame.height / 4))
         }
     }
     
@@ -435,8 +529,11 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         endTranslationPreparations()
         
         UIView.animate(withDuration: 0.25) {
-//            self.translationView.frame.origin.y = self.view.frame.height + 15
-//            self.translationTextView.text = ""
+            self.translationView.alpha = 0
+        }
+        
+        UIView.animate(withDuration: 0.5) {
+            self.translationView.transform = .identity
         }
     }
     
@@ -468,24 +565,9 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
             targetLanguageTapRegion.trailingAnchor.constraint(equalTo: targetLanguageView.trailingAnchor),
             targetLanguageTapRegion.bottomAnchor.constraint(equalTo: targetLanguageView.bottomAnchor),
             
-//            translationView.topAnchor.constraint(equalTo: view.bottomAnchor, constant: 15),
-//            translationView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 37.5),
-//            translationView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -37.5),
-//            translationView.heightAnchor.constraint(equalToConstant: 350),
-            
-            translationContainerTitleView.leadingAnchor.constraint(equalTo: translationContainer.leadingAnchor, constant: 15),
-            translationContainerTitleView.trailingAnchor.constraint(equalTo: translationContainer.trailingAnchor),
-//            translationContainerTitleView.bottomAnchor.constraint(equalTo: translationContainer.topAnchor, constant: -5),
-            translationContainerTitleView.bottomAnchor.constraint(equalTo: translationContainer.topAnchor),
-            
-            translationContainer.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            translationContainer.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-            translationContainer.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
-//            translationContainer.heightAnchor.constraint(equalToConstant: 100),
-            
-            translationActionsContainer.topAnchor.constraint(equalTo: translationContainer.bottomAnchor, constant: 25),
-            translationActionsContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            translationActionsContainer.heightAnchor.constraint(equalToConstant: 40),
+            translationView.topAnchor.constraint(equalTo: view.bottomAnchor),
+            translationView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
+            translationView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
             
             activityIndicator.centerXAnchor.constraint(equalTo: recordedTextView.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: recordedTextView.centerYAnchor)
