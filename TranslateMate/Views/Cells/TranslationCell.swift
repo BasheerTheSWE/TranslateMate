@@ -71,7 +71,7 @@ final class TranslationCell: UITableViewCell {
         return label
     }()
     
-    private let copyIcon: UIImageView = ViewManager.shared.getIcon(named: "square.on.square", isLabelColored: true)
+    private let copyIcon: UIImageView = ViewManager.shared.getIcon(named: "square.on.square", tintColor: .label)
     private let copyTapRegion: UIView = ViewManager.shared.getTapRegion()
     
     private let translationLabel: UILabel = {

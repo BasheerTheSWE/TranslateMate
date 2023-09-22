@@ -12,7 +12,7 @@ final class TypeVC: UIViewController {
     private var targetLanguageIndex: Int = 0
     
     private let targetLanguageTapRegion: UIView = ViewManager.shared.getTapRegion()
-    private let translateIcon: UIImageView = ViewManager.shared.getIcon(named: "arrow.forward", isLabelColored: true)
+    private let translateIcon: UIImageView = ViewManager.shared.getIcon(named: "arrow.forward", tintColor: .link)
     private let sourceLanguageView: UIView = ViewManager.shared.getSourceLanguageView()
     private lazy var targetLanguageView: UIView = ViewManager.shared.getTargetLanguageView(textView: targetLanguageTextField)
     

@@ -33,14 +33,14 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     
     private let targetLanguageTapRegion: UIView = ViewManager.shared.getTapRegion()
     
-    private let translateIcon: UIImageView = ViewManager.shared.getIcon(named: "arrow.forward", isLabelColored: true)
-    private let copyIcon: UIImageView = ViewManager.shared.getIcon(named: "square.on.square")
-    private let speakIcon: UIImageView = ViewManager.shared.getIcon(named: "speaker.wave.2")
-    private let checkIcon: UIImageView = ViewManager.shared.getIcon(named: "checkmark.circle")
+    private let translateIcon: UIImageView = ViewManager.shared.getIcon(named: "arrow.forward", tintColor: .label)
+    private let copyIcon: UIImageView = ViewManager.shared.getIcon(named: "square.on.square", tintColor: .link)
+    private let speakIcon: UIImageView = ViewManager.shared.getIcon(named: "waveform.and.mic", tintColor: .link)
+    private let hideIcon: UIImageView = ViewManager.shared.getIcon(named: "eye.slash", tintColor: .link)
     
     private let copyTapRegion: UIView = ViewManager.shared.getTapRegion()
     private let speakTapRegion: UIView = ViewManager.shared.getTapRegion()
-    private let checkTapRegion: UIView = ViewManager.shared.getTapRegion()
+    private let hideTapRegion: UIView = ViewManager.shared.getTapRegion()
     
     private let recordedTextView: UITextView = {
         let textView = UITextView()
@@ -193,6 +193,59 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         return view
     }()
     
+    private lazy var translationActionsContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.layer.cornerRadius = 20
+        view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.2)
+        view.layer.borderWidth = 1
+        
+        // Components
+        view.addSubview(copyIcon)
+        view.addSubview(speakIcon)
+        view.addSubview(hideIcon)
+        view.addSubview(copyTapRegion)
+        view.addSubview(speakTapRegion)
+        view.addSubview(hideTapRegion)
+        
+        NSLayoutConstraint.activate([
+            copyIcon.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            copyIcon.widthAnchor.constraint(equalToConstant: 18),
+            copyIcon.heightAnchor.constraint(equalToConstant: 18),
+            copyIcon.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            copyIcon.trailingAnchor.constraint(equalTo: speakIcon.leadingAnchor, constant: -45),
+            
+            speakIcon.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            speakIcon.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            speakIcon.widthAnchor.constraint(equalToConstant: 18),
+            speakIcon.heightAnchor.constraint(equalToConstant: 18),
+            
+            hideIcon.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            hideIcon.widthAnchor.constraint(equalToConstant: 18),
+            hideIcon.heightAnchor.constraint(equalToConstant: 18),
+            hideIcon.leadingAnchor.constraint(equalTo: speakIcon.trailingAnchor, constant: 45),
+            hideIcon.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            copyTapRegion.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            copyTapRegion.centerXAnchor.constraint(equalTo: copyIcon.centerXAnchor),
+            copyTapRegion.widthAnchor.constraint(equalToConstant: 44),
+            copyTapRegion.heightAnchor.constraint(equalToConstant: 40),
+            
+            speakTapRegion.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            speakTapRegion.centerXAnchor.constraint(equalTo: speakIcon.centerXAnchor),
+            speakTapRegion.widthAnchor.constraint(equalToConstant: 44),
+            speakTapRegion.heightAnchor.constraint(equalToConstant: 40),
+            
+            hideTapRegion.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            hideTapRegion.centerXAnchor.constraint(equalTo: hideIcon.centerXAnchor),
+            hideTapRegion.widthAnchor.constraint(equalToConstant: 44),
+            hideTapRegion.heightAnchor.constraint(equalToConstant: 40),
+        ])
+        
+        return view
+    }()
+    
     private let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
         indicator.translatesAutoresizingMaskIntoConstraints = false
@@ -227,6 +280,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         view.addSubview(translationContainerTitleView)
         view.addSubview(translationContainer)
         view.addSubview(activityIndicator)
+        view.addSubview(translationActionsContainer)
         
         configureAutoLayout()
     }
@@ -255,7 +309,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         speakTapRegion.addGestureRecognizer(speakGesture)
         
         let checkGesture = UITapGestureRecognizer(target: self, action: #selector(clearTranslation))
-        checkTapRegion.addGestureRecognizer(checkGesture)
+        hideTapRegion.addGestureRecognizer(checkGesture)
     }
     
     // MARK: - ACTIONS
@@ -351,7 +405,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
 //            self.translationTextView.text = ""
         }
         
-        ViewManager.shared.animateIcon(icon: checkIcon, tapRegion: checkTapRegion)
+        ViewManager.shared.animateIcon(icon: hideIcon, tapRegion: hideTapRegion)
     }
     
     
@@ -428,6 +482,10 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
             translationContainer.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
             translationContainer.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
 //            translationContainer.heightAnchor.constraint(equalToConstant: 100),
+            
+            translationActionsContainer.topAnchor.constraint(equalTo: translationContainer.bottomAnchor, constant: 25),
+            translationActionsContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            translationActionsContainer.heightAnchor.constraint(equalToConstant: 40),
             
             activityIndicator.centerXAnchor.constraint(equalTo: recordedTextView.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: recordedTextView.centerYAnchor)
