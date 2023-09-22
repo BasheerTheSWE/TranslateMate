@@ -157,15 +157,21 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         
         let target = languages[targetLanguageIndex].code
         
-        recordedTextView.text = ""
-        
-        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: [.allowUserInteraction]) {
-            self.translationView.frame.origin.y = self.view.center.y - 200
-        }
-        
         APIManager.shared.translate(text: text, target: target) { data in
-            guard let data = try? JSONSerialization.jsonObject(with: data) else { return }
-            print(data)
+            self.parse(JSON: data)
+        }
+    }
+    
+    
+    private func parse(JSON: Data) {
+        let JSONDecoder = JSONDecoder()
+        
+        if let responses = try? JSONDecoder.decode(Response.self, from: JSON) {
+            guard let text = responses.matches.first?.translation as? String else { return }
+            DispatchQueue.main.async {
+                self.showTranslationView()
+                self.translationTextView.text = text
+            }
         }
     }
     
@@ -231,6 +237,23 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         }
         
         ViewManager.shared.animateIcon(icon: checkIcon, tapRegion: checkTapRegion)
+    }
+    
+    
+    private func showTranslationView() {
+        recordedTextView.text = ""
+        
+        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: [.allowUserInteraction]) {
+            self.translationView.frame.origin.y = self.view.center.y - 200
+        }
+    }
+    
+    
+    private func hideTranslationView() {
+        UIView.animate(withDuration: 0.25) {
+            self.translationView.frame.origin.y = self.view.frame.height + 15
+            self.translationTextView.text = ""
+        }
     }
     
     // MARK: - AUTOLAYOUT
@@ -303,10 +326,7 @@ extension VoiceVC: VoiceDelegate {
     func startVoiceRecording() {
         status = .isRecording
         
-        UIView.animate(withDuration: 0.25) {
-            self.translationView.frame.origin.y = self.view.frame.height + 15
-            self.translationTextView.text = ""
-        }
+        hideTranslationView()
         
         do {
             try VoiceManager.shared.startRecording { text in

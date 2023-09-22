@@ -116,9 +116,6 @@ final class TypeVC: UIViewController {
     
     
     private func configureGestures() {
-//        let viewGesture = UITapGestureRecognizer(target: self, action: #selector(cancelLanguageChange))
-//        view.addGestureRecognizer(viewGesture)
-        
         let targetLanguageGesture = UITapGestureRecognizer(target: self, action: #selector(changeLanguage))
         targetLanguageTapRegion.addGestureRecognizer(targetLanguageGesture)
     }
@@ -184,6 +181,7 @@ final class TypeVC: UIViewController {
     
     
     private func endTranslation() {
+        textView.text = ""
         textView.isUserInteractionEnabled = false
         textView.resignFirstResponder()
         

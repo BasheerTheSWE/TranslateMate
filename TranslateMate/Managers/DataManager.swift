@@ -7,13 +7,6 @@
 
 import Foundation
 
-
-struct Language {
-    let language: String
-    let code: String
-}
-
-
 final class DataManager {
     static let shared = DataManager()
     

@@ -12,6 +12,30 @@ class APIManager {
     
     func translate(text: String, target: String, source: String = "en", completion: @escaping ((Data) -> Void)) {
         let headers: [String: String] = [
+            "X-RapidAPI-Key": "42abd4dd86msha0250c6daf8f1b7p1b0618jsn59f4dd9f81bb",
+            "X-RapidAPI-Host": "translated-mymemory---translation-memory.p.rapidapi.com"
+        ]
+        
+        let body = NSMutableData(data: "langpair=\(source)|\(target)".data(using: .utf8)!)
+        body.append("&q=\(text)".data(using: .utf8)!)
+        
+        let endpoint = "https://translated-mymemory---translation-memory.p.rapidapi.com/get?langpair=\(source)%7C\(target)&q=\(text.replacingOccurrences(of: " ", with: "%20"))&mt=1&onlyprivate=0&de=a%40b.c"
+        guard let url = URL(string: endpoint) else { return }
+        
+        let request = NSMutableURLRequest(url: url)
+        request.httpMethod = "GET"
+        request.allHTTPHeaderFields = headers
+        
+        URLSession.shared.dataTask(with: request as URLRequest) { (data, _, error) in
+            guard error == nil,
+                  let data = data else { return }
+            completion(data)
+        }.resume()
+    }
+    
+    
+    func translateViaGoogleRapidAPI(text: String, target: String, source: String = "en", completion: @escaping ((Data) -> Void)) {
+        let headers: [String: String] = [
             "content-type": "application/x-www-form-urlencoded",
             "Accept-Encoding": "application/gzip",
             "X-RapidAPI-Key": "42abd4dd86msha0250c6daf8f1b7p1b0618jsn59f4dd9f81bb",
