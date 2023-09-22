@@ -10,7 +10,7 @@ import Foundation
 class APIManager {
     static let shared = APIManager()
     
-    func translate(text: String, target: String, source: String = "en", completion: @escaping ((Data) -> Void)) {
+    func translate(text: String, target: String, source: String = "en", completion: @escaping ((Data?, Error?) -> Void)) {
         let headers: [String: String] = [
             "X-RapidAPI-Key": "42abd4dd86msha0250c6daf8f1b7p1b0618jsn59f4dd9f81bb",
             "X-RapidAPI-Host": "translated-mymemory---translation-memory.p.rapidapi.com"
@@ -27,9 +27,7 @@ class APIManager {
         request.allHTTPHeaderFields = headers
         
         URLSession.shared.dataTask(with: request as URLRequest) { (data, _, error) in
-            guard error == nil,
-                  let data = data else { return }
-            completion(data)
+            completion(data, error)
         }.resume()
     }
     
