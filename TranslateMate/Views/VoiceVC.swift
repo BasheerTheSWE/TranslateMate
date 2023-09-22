@@ -91,6 +91,27 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         return label
     }()
     
+    private let translationLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        label.font = .systemFont(ofSize: 16)
+        label.numberOfLines = 0
+        
+        return label
+    }()
+    
+    private let sourceLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        label.font = .systemFont(ofSize: 12)
+        label.numberOfLines = 3
+        label.textColor = .systemGray
+        
+        return label
+    }()
+    
     private lazy var translationContainerTitleView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -114,31 +135,60 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         view.addSubview(imageView)
         
         NSLayoutConstraint.activate([
-            title.topAnchor.constraint(equalTo: view.topAnchor, constant: 8),
+            title.topAnchor.constraint(equalTo: view.topAnchor, constant: 10),
             title.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            title.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -8),
+            title.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10),
             
             translationContainerTargetLanguageLabel.centerYAnchor.constraint(equalTo: title.centerYAnchor),
             translationContainerTargetLanguageLabel.leadingAnchor.constraint(equalTo: title.trailingAnchor, constant: 5),
             
             imageView.centerYAnchor.constraint(equalTo: title.centerYAnchor),
-            imageView.leadingAnchor.constraint(equalTo: translationContainerTargetLanguageLabel.trailingAnchor, constant: 3),
-            imageView.widthAnchor.constraint(equalToConstant: 18),
-            imageView.heightAnchor.constraint(equalToConstant: 18)
+            imageView.leadingAnchor.constraint(equalTo: translationContainerTargetLanguageLabel.trailingAnchor, constant: 5),
+            imageView.widthAnchor.constraint(equalToConstant: 14),
+            imageView.heightAnchor.constraint(equalToConstant: 14)
         ])
         
         return view
     }()
     
-    private let translationContainer: UIView = {
+    private lazy var translationContainer: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         
-        view.backgroundColor = UITableView(frame: .zero, style: .insetGrouped).backgroundColor
+//        view.backgroundColor = UITableView(frame: .zero, style: .insetGrouped).backgroundColor
         
         view.layer.cornerRadius = 8
         view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.2)
         view.layer.borderWidth = 1
+        
+        // Components
+        let separator = UIView()
+        separator.translatesAutoresizingMaskIntoConstraints = false
+        separator.backgroundColor = .link
+        
+        translationLabel.text = "hello there my name is basheer and I am an ios developer hoping to be very rich in the future"
+        sourceLabel.text = "hello there my name is basheer and I am an ios developer hoping to be very rich in the future"
+        
+        view.addSubview(translationLabel)
+        view.addSubview(separator)
+        view.addSubview(sourceLabel)
+        
+        NSLayoutConstraint.activate([
+            translationLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 15),
+            translationLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
+            translationLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
+//            translationTextView.heightAnchor.constraint(lessThanOrEqualToConstant: 200),
+            
+            separator.topAnchor.constraint(equalTo: sourceLabel.topAnchor),
+            separator.leadingAnchor.constraint(equalTo: translationLabel.leadingAnchor, constant: 2),
+            separator.widthAnchor.constraint(equalToConstant: 1),
+            separator.bottomAnchor.constraint(equalTo: sourceLabel.bottomAnchor),
+            
+            sourceLabel.topAnchor.constraint(equalTo: translationLabel.bottomAnchor, constant: 15),
+            sourceLabel.leadingAnchor.constraint(equalTo: separator.trailingAnchor, constant: 15),
+            sourceLabel.trailingAnchor.constraint(equalTo: translationLabel.trailingAnchor),
+            sourceLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -15)
+        ])
         
         return view
     }()
@@ -377,7 +427,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
             translationContainer.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             translationContainer.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
             translationContainer.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
-            translationContainer.heightAnchor.constraint(equalToConstant: 100),
+//            translationContainer.heightAnchor.constraint(equalToConstant: 100),
             
             activityIndicator.centerXAnchor.constraint(equalTo: recordedTextView.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: recordedTextView.centerYAnchor)
