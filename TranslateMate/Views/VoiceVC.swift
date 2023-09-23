@@ -26,6 +26,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     private var status: Status = .notRecording
     var voiceRecordingAuthDelegate: VoiceRecordingAuthDelegate?
     private var targetLanguageIndex: Int = 0
+    private var currentSourceText: String = ""
     private let languages: [Language] = DataManager.shared.getLanguages()
     
     
@@ -179,6 +180,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         
+        view.isUserInteractionEnabled = true
         view.backgroundColor = .clear
         
         // Components
@@ -388,6 +390,9 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         let targetLanguageGesture = UITapGestureRecognizer(target: self, action: #selector(changeLanguage))
         targetLanguageTapRegion.addGestureRecognizer(targetLanguageGesture)
         
+        let targetLanguageGesture2 = UITapGestureRecognizer(target: self, action: #selector(changeLanguage))
+        translationContainerTitleView.addGestureRecognizer(targetLanguageGesture2)
+        
         let textViewGesture = UITapGestureRecognizer(target: self, action: #selector(cancelLanguageChange))
         recordedTextView.addGestureRecognizer(textViewGesture)
         
@@ -403,8 +408,9 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     
     // MARK: - ACTIONS
     private func translate() {
-        guard !recordedTextView.text.isEmpty,
-              let text = recordedTextView.text else { return }
+        guard !currentSourceText.isEmpty else { return }
+        
+        let text = currentSourceText
         
         let target = languages[targetLanguageIndex].code
         prepareToTranslate()
@@ -429,7 +435,8 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
             DispatchQueue.main.async {
                 self.translationContainerTargetLanguageLabel.text = self.languages[self.targetLanguageIndex].language
                 self.translationLabel.text = text
-                self.sourceLabel.text = self.recordedTextView.text
+                self.sourceLabel.text = self.currentSourceText
+//                self.sourceLabel.text = self.recordedTextView.text
                 
                 self.showTranslationResults()
             }
@@ -526,6 +533,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     
     
     private func clearWindowToRecord() {
+        currentSourceText = ""
         endTranslationPreparations()
         
         UIView.animate(withDuration: 0.25) {
@@ -598,6 +606,10 @@ extension VoiceVC: UIPickerViewDelegate, UIPickerViewDataSource {
         targetLanguageTextField.text = languages[row].language
         targetLanguageIndex = row
         
+        if translationView.alpha == 1 {
+            translate()
+        }
+        
         cancelLanguageChange()
     }
 }
@@ -624,6 +636,8 @@ extension VoiceVC: VoiceDelegate {
     
     func stopVoiceRecording() {
         status = .notRecording
+        currentSourceText = recordedTextView.text
+        
         VoiceManager.shared.stopRecording {
             self.translate()
         }
