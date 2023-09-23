@@ -11,6 +11,8 @@ final class TypeVC: UIViewController {
     private let languages: [Language] = DataManager.shared.getLanguages()
     private var targetLanguageIndex: Int = 0
     
+    private var translations: [Translation] = []
+    
     // MARK: - VIEWS
     private let targetLanguageTapRegion: UIView = ViewManager.shared.getTapRegion()
     private let translateIcon: UIImageView = ViewManager.shared.getIcon(named: "arrow.forward", tintColor: .link)
@@ -162,6 +164,7 @@ final class TypeVC: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(inputViewDismissed), name: UIResponder.keyboardWillHideNotification, object: nil)
         
         configureGestures()
+        fetchData()
     }
     
     
@@ -187,6 +190,18 @@ final class TypeVC: UIViewController {
     func setTabBar(controller: UITabBarController) {
         guard let controller = controller as? MainTabBar else { fatalError() }
         controller.typeDelegate = self
+    }
+    
+    // MARK: - DATA-ACTIONS
+    private func fetchData() {
+        CoreDataManager.shared.fetchData { error, data in
+            guard error == nil else {
+                return
+            }
+            
+            self.translations = data
+            self.tableView.reloadData()
+        }
     }
     
     // MARK: - ACTIONS
@@ -271,7 +286,10 @@ final class TypeVC: UIViewController {
         let alert = UIAlertController(title: "Clear History", message: "Are you sure you want to clear your translation history? This action cannot be undone.", preferredStyle: .alert)
         
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
-            print("hello world")
+            self.translations.forEach { translation in
+                CoreDataManager.shared.deleteObject(object: translation)
+                self.fetchData()
+            }
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .destructive))
         
@@ -351,19 +369,24 @@ extension TypeVC: UIPickerViewDelegate, UIPickerViewDataSource {
 extension TypeVC: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return translations.count > 0 ? 2 : 1
     }
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 1 ? 1 : 20
+        return section == 1 ? 1 : translations.count
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch indexPath.section {
+        let section = indexPath.section
+        let row = indexPath.row
+        
+        switch section {
         case 0:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: TranslationCell.id, for: indexPath) as? TranslationCell else { fatalError() }
+            
+            cell.set(translation: translations[row])
             
             return cell
             

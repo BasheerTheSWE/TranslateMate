@@ -390,8 +390,8 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         let targetLanguageGesture = UITapGestureRecognizer(target: self, action: #selector(changeLanguage))
         targetLanguageTapRegion.addGestureRecognizer(targetLanguageGesture)
         
-        let targetLanguageGesture2 = UITapGestureRecognizer(target: self, action: #selector(changeLanguage))
-        translationContainerTitleView.addGestureRecognizer(targetLanguageGesture2)
+        let translationContainerTitleGesture = UITapGestureRecognizer(target: self, action: #selector(changeLanguage))
+        translationContainerTitleView.addGestureRecognizer(translationContainerTitleGesture)
         
         let textViewGesture = UITapGestureRecognizer(target: self, action: #selector(cancelLanguageChange))
         recordedTextView.addGestureRecognizer(textViewGesture)
@@ -405,6 +405,15 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         let hideGesture = UITapGestureRecognizer(target: self, action: #selector(hideTranslationView))
         hideTapRegion.addGestureRecognizer(hideGesture)
     }
+    
+    // MARK: - DATA-ACTIONS
+//    private func saveObject(object: Translation) {
+//        CoreDataManager.shared.saveObject(object: object) { error in
+//            if error != nil {
+//                // TODO: Handle this saving error
+//            }
+//        }
+//    }
     
     // MARK: - ACTIONS
     private func translate() {
@@ -433,11 +442,27 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         if let responses = try? JSONDecoder.decode(Response.self, from: JSON) {
             guard let text = responses.matches.first?.translation as? String else { return }
             DispatchQueue.main.async {
-                self.translationContainerTargetLanguageLabel.text = self.languages[self.targetLanguageIndex].language
-                self.translationLabel.text = text
-                self.sourceLabel.text = self.currentSourceText
-//                self.sourceLabel.text = self.recordedTextView.text
+                let target = self.languages[self.targetLanguageIndex].language
+                let translation = text
+                let sourceText = self.currentSourceText
                 
+                // Updating the translationView components
+                self.translationContainerTargetLanguageLabel.text = target
+                self.translationLabel.text = translation
+                self.sourceLabel.text = sourceText
+                
+                // Saving the new translation to CoreData
+                CoreDataManager.shared.saveObject(target: target, translation: translation, sourceText: sourceText) { error in
+                    if error != nil {
+                        // TODO: Handle this saving error...
+                        let alert = UIAlertController(title: "Error", message: "Unable to save this translation to your device due to unknown reasons.", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "Ok", style: .default))
+                        
+                        self.present(alert, animated: true)
+                    }
+                }
+                
+                // Displaying the translationView
                 self.showTranslationResults()
             }
         }
@@ -450,6 +475,8 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         UIView.animate(withDuration: 0.2) {
             self.targetLanguageView.backgroundColor = .secondarySystemBackground
             self.targetLanguageTextField.textColor = .systemGray
+            
+            self.translationContainerTitleView.alpha = 0.25
         }
         
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0, options: [.allowUserInteraction]) {
@@ -466,6 +493,8 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         UIView.animate(withDuration: 0.2) {
             self.targetLanguageView.backgroundColor = .clear
             self.targetLanguageTextField.textColor = .label
+            
+            self.translationContainerTitleView.alpha = 1
         }
         
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0, options: [.allowUserInteraction]) {

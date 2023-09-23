@@ -62,7 +62,6 @@ final class TranslationCell: UITableViewCell {
     private let targetLanguageTitle: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "English"
         
         label.font = .systemFont(ofSize: 16, weight: .bold)
         label.textColor = .link
@@ -77,7 +76,6 @@ final class TranslationCell: UITableViewCell {
     private let translationLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "hello my friend my name is basheer and I am an iOS engineer who is currently working on an app called Avatalk"
         
         label.font = .systemFont(ofSize: 14)
         label.isUserInteractionEnabled = true
@@ -98,7 +96,6 @@ final class TranslationCell: UITableViewCell {
     private let sourceLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "hello my friend my name is basheer and I am an iOS engineer who is currently working on an app called Avatalk"
         
         label.font = .systemFont(ofSize: 12)
         label.numberOfLines = 0
@@ -127,6 +124,12 @@ final class TranslationCell: UITableViewCell {
     private func configureGestures() {
         let copyGesture = UITapGestureRecognizer(target: self, action: #selector(copyTranslation))
         copyTapRegion.addGestureRecognizer(copyGesture)
+    }
+    
+    func set(translation: Translation) {
+        targetLanguageTitle.text = translation.target
+        translationLabel.text = translation.translation
+        sourceLabel.text = translation.sourceText
     }
     
     // MARK: - ACTIONS
