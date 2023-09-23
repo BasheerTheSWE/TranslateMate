@@ -111,6 +111,7 @@ final class MainTabBar: UITabBarController {
         
         voiceVC.setTabBar(controller: self)
         voiceVC.voiceRecordingAuthDelegate = self
+        voiceVC.translationsDelegate = typeVC
         
         typeVC.setTabBar(controller: self)
         

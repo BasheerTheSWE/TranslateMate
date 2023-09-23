@@ -199,7 +199,7 @@ final class TypeVC: UIViewController {
                 return
             }
             
-            self.translations = data
+            self.translations = data.reversed()
             self.tableView.reloadData()
         }
     }
@@ -441,5 +441,13 @@ extension TypeVC: UITextViewDelegate {
 extension TypeVC: TypeDelegate {
     func startTyping() {
         startTranslation()
+    }
+}
+
+
+// MARK: - TRANSLATIONS DELEGATE
+extension TypeVC: TranslationsDelegate {
+    func newTranslationAdded() {
+        fetchData()
     }
 }

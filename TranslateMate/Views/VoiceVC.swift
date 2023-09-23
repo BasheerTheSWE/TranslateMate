@@ -13,6 +13,11 @@ protocol VoiceRecordingAuthDelegate {
     func setAuthResults(result: Bool)
 }
 
+protocol TranslationsDelegate {
+    // This protocol is used to update the TypeVC's table view when a new translation is added
+    func newTranslationAdded()
+}
+
 final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     /*
         * The status variable is used because there's a weird glitch that happen when I stop the audio recording. The device takes a final iteration and set the recorded text to what the microphone got, when its already having that value. So when I decide to clear it exactly when the audio recording is stopped that final iteration kicks in and reseted again.
@@ -24,10 +29,12 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     }
     
     private var status: Status = .notRecording
-    var voiceRecordingAuthDelegate: VoiceRecordingAuthDelegate?
     private var targetLanguageIndex: Int = 0
     private var currentSourceText: String = ""
     private let languages: [Language] = DataManager.shared.getLanguages()
+    
+    var voiceRecordingAuthDelegate: VoiceRecordingAuthDelegate?
+    var translationsDelegate: TranslationsDelegate?
     
     
     // MARK: - VIEWS
@@ -406,15 +413,6 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         hideTapRegion.addGestureRecognizer(hideGesture)
     }
     
-    // MARK: - DATA-ACTIONS
-//    private func saveObject(object: Translation) {
-//        CoreDataManager.shared.saveObject(object: object) { error in
-//            if error != nil {
-//                // TODO: Handle this saving error
-//            }
-//        }
-//    }
-    
     // MARK: - ACTIONS
     private func translate() {
         guard !currentSourceText.isEmpty else { return }
@@ -461,6 +459,9 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
                         self.present(alert, animated: true)
                     }
                 }
+                
+                // Update the TypeVC
+                self.translationsDelegate?.newTranslationAdded()
                 
                 // Displaying the translationView
                 self.showTranslationResults()
