@@ -26,9 +26,7 @@ class CoreDataManager {
     }
     
     
-    func saveObject(target: String, translation: String, sourceText: String, completion: @escaping ((Error?) -> Void)) {
-        var errorToReturn: Error? = nil
-        
+    func saveObject(parent: UIViewController, target: String, translation: String, sourceText: String) {
         let newObject = Translation(context: context)
         newObject.target = target
         newObject.translation = translation
@@ -37,10 +35,11 @@ class CoreDataManager {
         do {
             try context.save()
         } catch {
-            errorToReturn = error
+            let alert = UIAlertController(title: "Error", message: "Unable to save this translation to your device due to unknown reasons.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default))
+            
+            parent.present(alert, animated: true)
         }
-        
-        completion(errorToReturn)
     }
     
     

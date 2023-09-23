@@ -263,14 +263,8 @@ final class TypeVC: UIViewController {
             let target = languages[targetLanguageIndex].language
             
             APIManager.shared.translate(sourceText: sourceText, target: target) { [weak self] translation in
-                CoreDataManager.shared.saveObject(target: target, translation: translation, sourceText: sourceText) { error in
-                    if error != nil {
-                        let alert = UIAlertController(title: "Error", message: "Unable to save this translation to your device due to unknown reasons.", preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "Ok", style: .default))
-                        
-                        self?.present(alert, animated: true)
-                    }
-                }
+                guard let strongSelf = self else { return }
+                CoreDataManager.shared.saveObject(parent: strongSelf, target: target, translation: translation, sourceText: sourceText)
                 
                 self?.fetchData()
             }

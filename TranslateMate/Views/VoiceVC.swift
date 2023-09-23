@@ -424,20 +424,15 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         prepareToTranslate()
         
         APIManager.shared.translate(sourceText: sourceText, target: targetCode) { [weak self] translation in
+            guard let strongSelf = self else { return }
+            
             // Updating the translationView components
             self?.translationContainerTargetLanguageLabel.text = targetLanguage
             self?.translationLabel.text = translation
             self?.sourceLabel.text = sourceText
             
             // Saving the new translation to CoreData
-            CoreDataManager.shared.saveObject(target: targetLanguage, translation: translation, sourceText: sourceText) { error in
-                if error != nil {
-                    let alert = UIAlertController(title: "Error", message: "Unable to save this translation to your device due to unknown reasons.", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Ok", style: .default))
-                    
-                    self?.present(alert, animated: true)
-                }
-            }
+            CoreDataManager.shared.saveObject(parent: strongSelf, target: targetLanguage, translation: translation, sourceText: sourceText)
             
             // Update the TypeVC
             self?.translationsDelegate?.newTranslationAdded()
@@ -445,52 +440,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
             // Displaying the translationView
             self?.showTranslationResults()
         }
-        
-//        APIManager.shared.translate(text: text, target: target) { data, error in
-//            guard error == nil,
-//                  let data = data else {
-//                self.clearWindowToRecord()
-//                return
-//            }
-//
-//            self.parse(JSON: data)
-//        }
     }
-    
-    
-//    private func parse(JSON: Data) {
-//        let JSONDecoder = JSONDecoder()
-//
-//        if let responses = try? JSONDecoder.decode(Response.self, from: JSON) {
-//            guard let text = responses.matches.first?.translation as? String else { return }
-//            DispatchQueue.main.async {
-//                let target = self.languages[self.targetLanguageIndex].language
-//                let translation = text
-//                let sourceText = self.currentSourceText
-//
-//                // Updating the translationView components
-//                self.translationContainerTargetLanguageLabel.text = target
-//                self.translationLabel.text = translation
-//                self.sourceLabel.text = sourceText
-//
-//                // Saving the new translation to CoreData
-//                CoreDataManager.shared.saveObject(target: target, translation: translation, sourceText: sourceText) { error in
-//                    if error != nil {
-//                        let alert = UIAlertController(title: "Error", message: "Unable to save this translation to your device due to unknown reasons.", preferredStyle: .alert)
-//                        alert.addAction(UIAlertAction(title: "Ok", style: .default))
-//
-//                        self.present(alert, animated: true)
-//                    }
-//                }
-//
-//                // Update the TypeVC
-//                self.translationsDelegate?.newTranslationAdded()
-//
-//                // Displaying the translationView
-//                self.showTranslationResults()
-//            }
-//        }
-//    }
     
     
     @objc private func changeLanguage() {
