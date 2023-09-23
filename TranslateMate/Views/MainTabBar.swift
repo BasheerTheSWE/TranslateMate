@@ -119,7 +119,7 @@ final class MainTabBar: UITabBarController {
             voiceVC,
             typeVC
         ]
-                
+        
         configureTabBar()
         configureGestures()
         configureSubviews()

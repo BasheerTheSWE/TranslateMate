@@ -258,7 +258,24 @@ final class TypeVC: UIViewController {
     }
     
     
-    private func endTranslation() {
+    private func endTranslation(translate: Bool = false) {
+        if translate, let sourceText = textView.text, !sourceText.isEmpty {
+            let target = languages[targetLanguageIndex].language
+            
+            APIManager.shared.translate(sourceText: sourceText, target: target) { [weak self] translation in
+                CoreDataManager.shared.saveObject(target: target, translation: translation, sourceText: sourceText) { error in
+                    if error != nil {
+                        let alert = UIAlertController(title: "Error", message: "Unable to save this translation to your device due to unknown reasons.", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "Ok", style: .default))
+                        
+                        self?.present(alert, animated: true)
+                    }
+                }
+                
+                self?.fetchData()
+            }
+        }
+        
         textView.text = ""
         textView.isUserInteractionEnabled = false
         textView.resignFirstResponder()
@@ -428,7 +445,7 @@ extension TypeVC: UITableViewDelegate, UITableViewDataSource {
 extension TypeVC: UITextViewDelegate {
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         if text == "\n" {
-            endTranslation()
+            endTranslation(translate: true)
             return false
         }
         
