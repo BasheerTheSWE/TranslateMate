@@ -9,6 +9,8 @@ import UIKit
 import Speech
 
 final class VoiceManager {
+    // The VoiceManager is used to record the user's voice and extract text from it to translate.
+    
     static let shared = VoiceManager()
     
     private let audioEngine = AVAudioEngine()

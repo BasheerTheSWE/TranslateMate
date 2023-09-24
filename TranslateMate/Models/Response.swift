@@ -7,6 +7,8 @@
 
 import Foundation
 
+// This Model represents the API's response
+
 struct Response: Codable {
     let matches: [TranslationObject]
 }

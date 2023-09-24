@@ -126,6 +126,7 @@ final class TranslationCell: UITableViewCell {
         copyTapRegion.addGestureRecognizer(copyGesture)
     }
     
+    
     func set(translation: Translation) {
         targetLanguageTitle.text = translation.target
         translationLabel.text = translation.translation

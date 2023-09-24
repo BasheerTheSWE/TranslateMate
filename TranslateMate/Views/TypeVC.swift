@@ -267,13 +267,7 @@ final class TypeVC: UIViewController {
     private func endTranslation(translate: Bool = false) {
         if translate, let sourceText = textView.text, !sourceText.isEmpty {
             let target = languages[targetLanguageIndex].language
-            
-            APIManager.shared.translate(sourceText: sourceText, target: target) { [weak self] translation in
-                guard let strongSelf = self else { return }
-                CoreDataManager.shared.saveObject(parent: strongSelf, target: target, translation: translation, sourceText: sourceText)
-                
-                self?.fetchData(smoothRefresh: true)
-            }
+            self.translate(sourceText: sourceText, target: target)
         }
         
         textView.text = ""
@@ -289,6 +283,17 @@ final class TypeVC: UIViewController {
             self.textView.transform = .identity
             self.textViewContainer.transform  = .identity
             self.tableView.transform = .identity
+        }
+    }
+    
+    
+    private func translate(sourceText: String, target: String) {
+        APIManager.shared.translate(parent: self, sourceText: sourceText, target: target) { [weak self] translation in
+            guard let strongSelf = self,
+                  let translation = translation else { return }
+            CoreDataManager.shared.saveObject(parent: strongSelf, target: target, translation: translation, sourceText: sourceText)
+            
+            self?.fetchData(smoothRefresh: true)
         }
     }
     

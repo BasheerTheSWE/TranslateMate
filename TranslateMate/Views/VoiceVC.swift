@@ -226,9 +226,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     private lazy var translationContainer: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        
-//        view.backgroundColor = UITableView(frame: .zero, style: .insetGrouped).backgroundColor
-        
+                
         view.layer.cornerRadius = 8
         view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.2)
         view.layer.borderWidth = 1
@@ -423,8 +421,12 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         let targetLanguage = languages[targetLanguageIndex].language
         prepareToTranslate()
         
-        APIManager.shared.translate(sourceText: sourceText, target: targetCode) { [weak self] translation in
-            guard let strongSelf = self else { return }
+        APIManager.shared.translate(parent: self, sourceText: sourceText, target: targetCode) { [weak self] translation in
+            guard let strongSelf = self,
+                  let translation = translation else {
+                self?.endTranslationPreparations()
+                return
+            }
             
             // Updating the translationView components
             self?.translationContainerTargetLanguageLabel.text = targetLanguage
