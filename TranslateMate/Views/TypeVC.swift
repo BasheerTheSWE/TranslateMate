@@ -22,6 +22,7 @@ final class TypeVC: UIViewController {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         
+        // UI Configuration
         view.backgroundColor = .clear
         
         view.layer.cornerRadius = 8
@@ -35,9 +36,9 @@ final class TypeVC: UIViewController {
         label.text = "English"
         label.font = .systemFont(ofSize: 17, weight: .medium)
         
-        // AutoLayout
         view.addSubview(label)
         
+        // AutoLayout
         NSLayoutConstraint.activate([
             label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
@@ -51,6 +52,7 @@ final class TypeVC: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isUserInteractionEnabled = true
         
+        // UI Configuration
         view.backgroundColor = .clear
         
         view.layer.cornerRadius = 8
@@ -62,10 +64,10 @@ final class TypeVC: UIViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.tintColor = .systemGray
         
-        // AutoLayout
         view.addSubview(targetLanguageTextField)
         view.addSubview(imageView)
         
+        // AutoLayout
         NSLayoutConstraint.activate([
             targetLanguageTextField.topAnchor.constraint(equalTo: view.topAnchor),
             targetLanguageTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -97,6 +99,7 @@ final class TypeVC: UIViewController {
         field.text = languages[0].language
         field.allowsEditingTextAttributes = false
         
+        // UI Configuration
         field.inputView = languagePicker
         field.textAlignment = .left
         field.font = .systemFont(ofSize: 17, weight: .medium)
@@ -112,6 +115,7 @@ final class TypeVC: UIViewController {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         
+        // UI Configuration
         view.backgroundColor = UITableView(frame: .zero, style: .insetGrouped).backgroundColor
         view.alpha = 0
         
@@ -124,6 +128,7 @@ final class TypeVC: UIViewController {
         
         textView.delegate = self
         
+        // UI Configuration
         textView.backgroundColor = .secondarySystemGroupedBackground
         textView.font = .systemFont(ofSize: 16)
         textView.layer.cornerRadius = 8
@@ -146,9 +151,11 @@ final class TypeVC: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         
+        // Cells registration
         tableView.register(TranslationCell.self, forCellReuseIdentifier: TranslationCell.id)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
+        // TableView functionality
         tableView.keyboardDismissMode = .onDrag
         tableView.contentInset.bottom = 150
         tableView.separatorStyle = .none
@@ -203,6 +210,8 @@ final class TypeVC: UIViewController {
             self?.translations = data.reversed()
             
             if smoothRefresh {
+                // The clear history button is hidden if the translations count was zero, so If the translations count was equal to (1) this code will refresh the whole table view to show the clear history button, otherwise it will just insert the new translation to the top of the table.
+                
                 strongSelf.translations.count > 1 ? self?.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic) : self?.tableView.reloadData()
             } else {
                 self?.tableView.reloadData()
@@ -291,8 +300,8 @@ final class TypeVC: UIViewController {
         APIManager.shared.translate(parent: self, sourceText: sourceText, target: target) { [weak self] translation in
             guard let strongSelf = self,
                   let translation = translation else { return }
-            CoreDataManager.shared.saveObject(parent: strongSelf, target: target, translation: translation, sourceText: sourceText)
             
+            CoreDataManager.shared.saveObject(parent: strongSelf, target: target, translation: translation, sourceText: sourceText)
             self?.fetchData(smoothRefresh: true)
         }
     }
@@ -305,8 +314,10 @@ final class TypeVC: UIViewController {
     
     
     private func clearHistory() {
+        // Creating a confirmation alert to the user
         let alert = UIAlertController(title: "Clear History", message: "Are you sure you want to clear your translation history? This action cannot be undone.", preferredStyle: .alert)
         
+        // Adding actions to it
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
             self.translations.forEach { translation in
                 CoreDataManager.shared.deleteObject(object: translation)
@@ -315,6 +326,7 @@ final class TypeVC: UIViewController {
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .destructive))
         
+        // Presenting the alert
         present(alert, animated: true)
     }
     

@@ -10,10 +10,16 @@ import UIKit
 final class TranslationCell: UITableViewCell {
     static let id: String = "TranslationCell"
     
+    private let copyIcon: UIImageView = ViewManager.shared.getIcon(named: "square.on.square", tintColor: .label)
+    private let copyTapRegion: UIView = ViewManager.shared.getTapRegion()
+    
+    
+    // MARK: - VIEWS
     private lazy var container: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         
+        // UI Configuration
         view.backgroundColor = .secondarySystemGroupedBackground
         view.layer.cornerRadius = 8
         view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.2)
@@ -26,7 +32,8 @@ final class TranslationCell: UITableViewCell {
         view.addSubview(translationLabel)
         view.addSubview(separator)
         view.addSubview(sourceLabel)
-                
+        
+        // AutoLayout
         NSLayoutConstraint.activate([
             targetLanguageTitle.topAnchor.constraint(equalTo: view.topAnchor, constant: 15),
             targetLanguageTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
@@ -63,6 +70,7 @@ final class TranslationCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         
+        // UI Configuration
         label.font = .systemFont(ofSize: 16, weight: .bold)
         label.textColor = .link
         label.numberOfLines = 0
@@ -70,13 +78,11 @@ final class TranslationCell: UITableViewCell {
         return label
     }()
     
-    private let copyIcon: UIImageView = ViewManager.shared.getIcon(named: "square.on.square", tintColor: .label)
-    private let copyTapRegion: UIView = ViewManager.shared.getTapRegion()
-    
     private let translationLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         
+        // UI Configuration
         label.font = .systemFont(ofSize: 14)
         label.isUserInteractionEnabled = true
         label.numberOfLines = 0
@@ -88,6 +94,7 @@ final class TranslationCell: UITableViewCell {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         
+        // UI Configuration
         view.backgroundColor = .link
         
         return view
@@ -97,6 +104,7 @@ final class TranslationCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         
+        // UI Configuration
         label.font = .systemFont(ofSize: 12)
         label.numberOfLines = 0
         label.textColor = .systemGray
@@ -107,6 +115,7 @@ final class TranslationCell: UITableViewCell {
     // MARK: - INIT
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
         contentView.isUserInteractionEnabled = true
         backgroundColor = .clear
         selectionStyle = .none

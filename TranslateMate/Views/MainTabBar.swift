@@ -34,6 +34,7 @@ final class MainTabBar: UITabBarController {
         view.frame.size = CGSize(width: 100, height: 100)
         view.isUserInteractionEnabled = true
         
+        // UI Configuration
         view.transform = CGAffineTransform(translationX: self.view.frame.width/4, y: 0)
         
         view.backgroundColor = .systemBackground
@@ -41,6 +42,7 @@ final class MainTabBar: UITabBarController {
         view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
         view.layer.borderWidth = 1
         
+        // Shadows
         view.layer.shadowColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
         view.layer.shadowOpacity = 0.3
         view.layer.shadowOffset = .zero
@@ -56,6 +58,7 @@ final class MainTabBar: UITabBarController {
         let imageView = UIImageView(image: UIImage(systemName: "mic.fill"))
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
+        // UI Configuration
         imageView.transform = CGAffineTransform(translationX: self.view.frame.width/4, y: 0)
         
         imageView.tintColor = .systemGray
@@ -70,6 +73,7 @@ final class MainTabBar: UITabBarController {
         view.frame.size = CGSize(width: 100, height: 100)
         view.isUserInteractionEnabled = true
         
+        // UI Configuration
         view.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
         
         view.backgroundColor = .systemBackground
@@ -87,6 +91,7 @@ final class MainTabBar: UITabBarController {
         let imageView = UIImageView(image: UIImage(systemName: "keyboard"))
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
+        // UI Configuration
         imageView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
         
         imageView.tintColor = .systemGray5
@@ -100,12 +105,15 @@ final class MainTabBar: UITabBarController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         
+        // Defining the ViewControllers
         let voiceVC = VoiceVC()
         let typeVC = TypeVC()
         
+        // Assigning tags
         voiceVC.tabBarItem.tag = 0
         typeVC.tabBarItem.tag = 1
         
+        // Setting up the custom delegates
         voiceVC.setTabBar(controller: self)
         voiceVC.voiceRecordingAuthDelegate = self
         voiceVC.translationsDelegate = typeVC
@@ -158,6 +166,8 @@ final class MainTabBar: UITabBarController {
     @objc private func activateVoiceMode() {
         if isVoiceRecordingAuthorized {
             if selectedIndex == 0 {
+                // This clause will be activate if the Voice button was clicked while on the VoiceVC.
+                
                 recordingStatus = recordingStatus == .isRecording ? .notRecording : .isRecording
                 
                 switch recordingStatus {
@@ -188,6 +198,7 @@ final class MainTabBar: UITabBarController {
     
     
     @objc private func activateTypeMode() {
+        // If the voice recording was on, the user can't switch to the TypeVC.
         guard recordingStatus == .notRecording else { return }
         
         if selectedIndex == 1 {

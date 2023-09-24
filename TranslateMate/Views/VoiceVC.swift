@@ -55,6 +55,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isUserInteractionEnabled = true
         
+        // UI Configuration
         view.backgroundColor = .clear
         
         view.layer.cornerRadius = 8
@@ -66,10 +67,10 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.tintColor = .systemGray
         
-        // AutoLayout
         view.addSubview(targetLanguageTextField)
         view.addSubview(imageView)
         
+        // AutoLayout
         NSLayoutConstraint.activate([
             targetLanguageTextField.topAnchor.constraint(equalTo: view.topAnchor),
             targetLanguageTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -89,6 +90,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         
+        // UI Configuration
         view.backgroundColor = .clear
         
         view.layer.cornerRadius = 8
@@ -102,9 +104,9 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         label.text = "English"
         label.font = .systemFont(ofSize: 17, weight: .medium)
         
-        // AutoLayout
         view.addSubview(label)
         
+        // AutoLayout
         NSLayoutConstraint.activate([
             label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
@@ -118,6 +120,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.isEditable = false
         
+        // UI Configuration
         textView.backgroundColor = .clear
         textView.font = .systemFont(ofSize: 25, weight: .medium)
         textView.textAlignment = .center
@@ -141,6 +144,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         field.text = languages[0].language
         field.allowsEditingTextAttributes = false
         
+        // UI Configuration
         field.inputView = languagePicker
         field.textAlignment = .left
         field.font = .systemFont(ofSize: 17, weight: .medium)
@@ -156,6 +160,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         
+        // UI Configuration
         label.text = "Arabic"
         label.font = .systemFont(ofSize: 14, weight: .bold)
         
@@ -166,6 +171,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         
+        // UI Configuration
         label.font = .systemFont(ofSize: 16)
         label.numberOfLines = 0
         
@@ -176,6 +182,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         
+        // UI Configuration
         label.font = .systemFont(ofSize: 12)
         label.numberOfLines = 3
         label.textColor = .systemGray
@@ -187,6 +194,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         
+        // UI Configuration
         view.isUserInteractionEnabled = true
         view.backgroundColor = .clear
         
@@ -206,6 +214,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         view.addSubview(translationContainerTargetLanguageLabel)
         view.addSubview(imageView)
         
+        // AutoLayout
         NSLayoutConstraint.activate([
             title.topAnchor.constraint(equalTo: view.topAnchor, constant: 10),
             title.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -227,6 +236,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
                 
+        // UI Configuration
         view.layer.cornerRadius = 8
         view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.2)
         view.layer.borderWidth = 1
@@ -243,11 +253,11 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         view.addSubview(separator)
         view.addSubview(sourceLabel)
         
+        // AutoLayout
         NSLayoutConstraint.activate([
             translationLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 15),
             translationLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
             translationLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
-//            translationTextView.heightAnchor.constraint(lessThanOrEqualToConstant: 200),
             
             separator.topAnchor.constraint(equalTo: sourceLabel.topAnchor),
             separator.leadingAnchor.constraint(equalTo: translationLabel.leadingAnchor, constant: 2),
@@ -267,6 +277,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         
+        // UI Configuration
         view.layer.cornerRadius = 20
         view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.2)
         view.layer.borderWidth = 1
@@ -279,6 +290,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         view.addSubview(speakTapRegion)
         view.addSubview(hideTapRegion)
         
+        // AutoLayout
         NSLayoutConstraint.activate([
             copyIcon.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             copyIcon.widthAnchor.constraint(equalToConstant: 18),
@@ -320,6 +332,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         
+        // UI Configuration
         view.alpha = 0
         
         // Components
@@ -327,6 +340,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         view.addSubview(translationContainer)
         view.addSubview(translationActionsContainer)
         
+        // AutoLayout
         NSLayoutConstraint.activate([
             translationContainerTitleView.topAnchor.constraint(equalTo: view.topAnchor),
             translationContainerTitleView.leadingAnchor.constraint(equalTo: translationContainer.leadingAnchor, constant: 15),
