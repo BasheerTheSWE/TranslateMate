@@ -38,13 +38,14 @@ final class MainTabBar: UITabBarController {
         
         view.backgroundColor = .systemBackground
         view.layer.cornerRadius = 50
+        view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
+        view.layer.borderWidth = 1
         
         view.layer.shadowColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
-//        view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOpacity = 0.3
         view.layer.shadowOffset = .zero
-        view.layer.shadowRadius = 5
-        
+        view.layer.shadowRadius = 0
+
         view.layer.shadowPath = UIBezierPath(roundedRect: view.bounds, cornerRadius: 50).cgPath
         
         
@@ -73,12 +74,8 @@ final class MainTabBar: UITabBarController {
         
         view.backgroundColor = .systemBackground
         view.layer.cornerRadius = 50
-        
-        view.layer.shadowColor = CGColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
-//        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.3
-        view.layer.shadowOffset = .zero
-        view.layer.shadowRadius = 5
+        view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
+        view.layer.borderWidth = 1
         
         view.layer.shadowPath = UIBezierPath(roundedRect: view.bounds, cornerRadius: 50).cgPath
         
@@ -154,7 +151,7 @@ final class MainTabBar: UITabBarController {
         
         voiceImageView.tintColor = .systemGray
         voiceButtonView.layer.shadowColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
-        voiceButtonView.layer.shadowRadius = 5
+        voiceButtonView.layer.shadowRadius = 0
     }
     
     

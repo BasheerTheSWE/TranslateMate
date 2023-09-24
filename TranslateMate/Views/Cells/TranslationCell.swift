@@ -88,7 +88,7 @@ final class TranslationCell: UITableViewCell {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         
-        view.backgroundColor = .label
+        view.backgroundColor = .link
         
         return view
     }()

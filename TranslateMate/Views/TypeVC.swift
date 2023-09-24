@@ -15,7 +15,7 @@ final class TypeVC: UIViewController {
     
     // MARK: - VIEWS
     private let targetLanguageTapRegion: UIView = ViewManager.shared.getTapRegion()
-    private let translateIcon: UIImageView = ViewManager.shared.getIcon(named: "arrow.forward", tintColor: .link)
+    private let translateIcon: UIImageView = ViewManager.shared.getIcon(named: "arrow.forward", tintColor: .label)
     
     
     private let sourceLanguageView: UIView = {
@@ -193,14 +193,20 @@ final class TypeVC: UIViewController {
     }
     
     // MARK: - DATA-ACTIONS
-    private func fetchData() {
-        CoreDataManager.shared.fetchData { error, data in
-            guard error == nil else {
+    private func fetchData(smoothRefresh: Bool = false) {
+        CoreDataManager.shared.fetchData { [weak self] error, data in
+            guard error == nil,
+                  let strongSelf = self else {
                 return
             }
             
-            self.translations = data.reversed()
-            self.tableView.reloadData()
+            self?.translations = data.reversed()
+            
+            if smoothRefresh {
+                strongSelf.translations.count > 1 ? self?.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic) : self?.tableView.reloadData()
+            } else {
+                self?.tableView.reloadData()
+            }
         }
     }
     
@@ -266,7 +272,7 @@ final class TypeVC: UIViewController {
                 guard let strongSelf = self else { return }
                 CoreDataManager.shared.saveObject(parent: strongSelf, target: target, translation: translation, sourceText: sourceText)
                 
-                self?.fetchData()
+                self?.fetchData(smoothRefresh: true)
             }
         }
         
@@ -380,7 +386,7 @@ extension TypeVC: UIPickerViewDelegate, UIPickerViewDataSource {
 extension TypeVC: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return translations.count > 0 ? 2 : 1
+        return 2
     }
     
     
@@ -414,6 +420,8 @@ extension TypeVC: UITableViewDelegate, UITableViewDataSource {
             
             cell.contentConfiguration = info
             cell.backgroundColor = .label
+            
+            cell.isHidden = translations.count > 0 ? false : true
             
             return cell
             
@@ -459,6 +467,6 @@ extension TypeVC: TypeDelegate {
 // MARK: - TRANSLATIONS DELEGATE
 extension TypeVC: TranslationsDelegate {
     func newTranslationAdded() {
-        fetchData()
+        fetchData(smoothRefresh: true)
     }
 }
