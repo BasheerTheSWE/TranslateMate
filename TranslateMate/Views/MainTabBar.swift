@@ -50,6 +50,40 @@ final class MainTabBar: UITabBarController {
 
         view.layer.shadowPath = UIBezierPath(roundedRect: view.bounds, cornerRadius: 50).cgPath
         
+        // Components
+        let innerView = UIView()
+        innerView.translatesAutoresizingMaskIntoConstraints = false
+        innerView.backgroundColor = view.backgroundColor
+        
+        voiceButtonViewRing.layer.cornerRadius = 40
+        innerView.layer.cornerRadius = 35
+        
+        view.addSubview(voiceButtonViewRing)
+        view.addSubview(innerView)
+        
+        // AutoLayout
+        NSLayoutConstraint.activate([
+            voiceButtonViewRing.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            voiceButtonViewRing.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            voiceButtonViewRing.widthAnchor.constraint(equalToConstant: 80),
+            voiceButtonViewRing.heightAnchor.constraint(equalToConstant: 80),
+            
+            innerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            innerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            innerView.widthAnchor.constraint(equalToConstant: 70),
+            innerView.heightAnchor.constraint(equalToConstant: 70),
+        ])
+        
+        
+        return view
+    }()
+    
+    private let voiceButtonViewRing: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        // UI Configuration
+        view.backgroundColor = .secondarySystemBackground
         
         return view
     }()
@@ -151,6 +185,8 @@ final class MainTabBar: UITabBarController {
         voiceImageView.tintColor = .systemRed
         voiceButtonView.layer.shadowColor = CGColor(red: 1, green: 0.25, blue: 0.25, alpha: 1)
         voiceButtonView.layer.shadowRadius = 20
+        
+        voiceButtonViewRing.backgroundColor = .systemRed
     }
     
     
@@ -160,6 +196,8 @@ final class MainTabBar: UITabBarController {
         voiceImageView.tintColor = .systemGray
         voiceButtonView.layer.shadowColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
         voiceButtonView.layer.shadowRadius = 0
+        
+        voiceButtonViewRing.backgroundColor = .secondarySystemBackground
     }
     
     
