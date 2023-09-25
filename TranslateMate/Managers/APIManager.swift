@@ -15,6 +15,7 @@ class APIManager {
     func translate(parent: UIViewController, sourceText: String, target: String, source: String = "en", completion: @escaping ((_ translation: String?) -> Void)) {
         // API's headers
         let headers: [String: String] = [
+            // Don't event think about stealing this my friend, I'm using the free plan anyway 😛
             "X-RapidAPI-Key": "42abd4dd86msha0250c6daf8f1b7p1b0618jsn59f4dd9f81bb",
             "X-RapidAPI-Host": "translated-mymemory---translation-memory.p.rapidapi.com"
         ]
@@ -23,7 +24,7 @@ class APIManager {
         let text = sourceText.replacingOccurrences(of: " ", with: "%20")
         let endpoint = "https://translated-mymemory---translation-memory.p.rapidapi.com/get?langpair=\(source)%7C\(target)&q=\(text)&mt=1&onlyprivate=0&de=a%40b.c"
         
-        // The URLRequest
+        // The URL & URLRequest Configurations
         guard let url = URL(string: endpoint) else { return }
         
         let request = NSMutableURLRequest(url: url)
@@ -37,6 +38,7 @@ class APIManager {
                   let response = try? JSONDecoder().decode(Response.self, from: data),
                   let translation = response.matches.first?.translation as? String else {
                 
+                // If anything went wrong this alert will be shown to the user
                 DispatchQueue.main.async {
                     let alert = UIAlertController(title: "Network Error", message: "Unable to establish a network connection. Please check your internet connectivity and try again.", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "Ok", style: .default))
@@ -48,6 +50,7 @@ class APIManager {
                 return
             }
             
+            // Success
             DispatchQueue.main.async {
                 completion(translation)
             }
