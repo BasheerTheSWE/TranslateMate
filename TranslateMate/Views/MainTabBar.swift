@@ -50,30 +50,6 @@ final class MainTabBar: UITabBarController {
 
         view.layer.shadowPath = UIBezierPath(roundedRect: view.bounds, cornerRadius: 50).cgPath
         
-        // Components
-        voiceButtonViewRing.layer.cornerRadius = 5
-        
-        view.addSubview(voiceButtonViewRing)
-
-        // AutoLayout
-        NSLayoutConstraint.activate([
-            voiceButtonViewRing.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            voiceButtonViewRing.widthAnchor.constraint(equalToConstant: 10),
-            voiceButtonViewRing.heightAnchor.constraint(equalToConstant: 10),
-            voiceButtonViewRing.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10),
-        ])
-        
-        
-        return view
-    }()
-    
-    private let voiceButtonViewRing: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        
-        // UI Configuration
-        view.backgroundColor = .secondarySystemBackground
-        
         return view
     }()
     
@@ -175,8 +151,6 @@ final class MainTabBar: UITabBarController {
         voiceButtonView.layer.borderColor = CGColor(red: 1, green: 0.25, blue: 0.25, alpha: 1)
         voiceButtonView.layer.shadowColor = CGColor(red: 1, green: 0.25, blue: 0.25, alpha: 1)
         voiceButtonView.layer.shadowRadius = 20
-        
-        voiceButtonViewRing.backgroundColor = .systemRed
     }
     
     
@@ -187,8 +161,6 @@ final class MainTabBar: UITabBarController {
         voiceButtonView.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
         voiceButtonView.layer.shadowColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
         voiceButtonView.layer.shadowRadius = 0
-        
-        voiceButtonViewRing.backgroundColor = .secondarySystemBackground
     }
     
     
