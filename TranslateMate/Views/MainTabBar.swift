@@ -51,27 +51,16 @@ final class MainTabBar: UITabBarController {
         view.layer.shadowPath = UIBezierPath(roundedRect: view.bounds, cornerRadius: 50).cgPath
         
         // Components
-        let innerView = UIView()
-        innerView.translatesAutoresizingMaskIntoConstraints = false
-        innerView.backgroundColor = view.backgroundColor
-        
-        voiceButtonViewRing.layer.cornerRadius = 40
-        innerView.layer.cornerRadius = 35
+        voiceButtonViewRing.layer.cornerRadius = 5
         
         view.addSubview(voiceButtonViewRing)
-        view.addSubview(innerView)
-        
+
         // AutoLayout
         NSLayoutConstraint.activate([
             voiceButtonViewRing.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            voiceButtonViewRing.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            voiceButtonViewRing.widthAnchor.constraint(equalToConstant: 80),
-            voiceButtonViewRing.heightAnchor.constraint(equalToConstant: 80),
-            
-            innerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            innerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            innerView.widthAnchor.constraint(equalToConstant: 70),
-            innerView.heightAnchor.constraint(equalToConstant: 70),
+            voiceButtonViewRing.widthAnchor.constraint(equalToConstant: 10),
+            voiceButtonViewRing.heightAnchor.constraint(equalToConstant: 10),
+            voiceButtonViewRing.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10),
         ])
         
         
@@ -183,6 +172,7 @@ final class MainTabBar: UITabBarController {
         voiceDelegate?.startVoiceRecording()
         
         voiceImageView.tintColor = .systemRed
+        voiceButtonView.layer.borderColor = CGColor(red: 1, green: 0.25, blue: 0.25, alpha: 1)
         voiceButtonView.layer.shadowColor = CGColor(red: 1, green: 0.25, blue: 0.25, alpha: 1)
         voiceButtonView.layer.shadowRadius = 20
         
@@ -194,6 +184,7 @@ final class MainTabBar: UITabBarController {
         voiceDelegate?.stopVoiceRecording()
         
         voiceImageView.tintColor = .systemGray
+        voiceButtonView.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
         voiceButtonView.layer.shadowColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
         voiceButtonView.layer.shadowRadius = 0
         
