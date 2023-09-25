@@ -113,10 +113,9 @@
 		3A540C5E2AB46E64009AF9E7 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				3ABF8CD12ABB53D000B846AE /* Cells */,
-				3A540C622AB483EB009AF9E7 /* VoiceVC.swift */,
 				3AA2E9362AB56F94007AB9EF /* MainTabBar.swift */,
-				3AA2E9382AB5719B007AB9EF /* TypeVC.swift */,
+				3AE3A8102AC1A52A003E74D6 /* Tabs */,
+				3ABF8CD12ABB53D000B846AE /* Cells */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -146,6 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				3AB934202ABC8E2400B585E0 /* Language.swift */,
+				3A91F05F2ABF34DC009FCBCD /* CoreDataModels */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -153,7 +153,6 @@
 		3AB934242ABD38A700B585E0 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				3A91F05F2ABF34DC009FCBCD /* CoreDataModels */,
 				3AB934252ABD38B400B585E0 /* Response.swift */,
 			);
 			path = Models;
@@ -165,6 +164,15 @@
 				3ABF8CD22ABB53E000B846AE /* TranslationCell.swift */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		3AE3A8102AC1A52A003E74D6 /* Tabs */ = {
+			isa = PBXGroup;
+			children = (
+				3A540C622AB483EB009AF9E7 /* VoiceVC.swift */,
+				3AA2E9382AB5719B007AB9EF /* TypeVC.swift */,
+			);
+			path = Tabs;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
