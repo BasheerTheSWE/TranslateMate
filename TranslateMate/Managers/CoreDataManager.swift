@@ -28,9 +28,10 @@ class CoreDataManager {
     
     func saveObject(parent: UIViewController, target: String, translation: String, sourceText: String) {
         let newObject = Translation(context: context)
-        newObject.target = target
+        
+        newObject.target      = target
         newObject.translation = translation
-        newObject.sourceText = sourceText
+        newObject.sourceText  = sourceText
         
         do {
             try context.save()

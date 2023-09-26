@@ -8,14 +8,14 @@
 import UIKit
 
 final class TypeVC: UIViewController {
-    private let languages: [Language] = DataManager.shared.getLanguages()
+    private let languages: [Language]    = DataManager.shared.getLanguages()
     private var targetLanguageIndex: Int = 0
     
     private var translations: [Translation] = []
     
     // MARK: - VIEWS
     private let targetLanguageTapRegion: UIView = ViewManager.shared.getTapRegion()
-    private let translateIcon: UIImageView = ViewManager.shared.getIcon(named: "arrow.forward", tintColor: .label)
+    private let translateIcon: UIImageView      = ViewManager.shared.getIcon(named: "arrow.forward", tintColor: .label)
     
     
     private let sourceLanguageView: UIView = {
@@ -26,8 +26,8 @@ final class TypeVC: UIViewController {
         view.backgroundColor = .clear
         
         view.layer.cornerRadius = 8
-        view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
-        view.layer.borderWidth = 1
+        view.layer.borderColor  = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
+        view.layer.borderWidth  = 1
         
         // Components
         let label = UILabel()
@@ -50,18 +50,20 @@ final class TypeVC: UIViewController {
     private lazy var targetLanguageView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        
         view.isUserInteractionEnabled = true
         
         // UI Configuration
         view.backgroundColor = .clear
         
         view.layer.cornerRadius = 8
-        view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
-        view.layer.borderWidth = 1
+        view.layer.borderColor  = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
+        view.layer.borderWidth  = 1
         
         // Components
         let imageView: UIImageView = UIImageView(image: UIImage(systemName: "chevron.down.circle"))
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        
         imageView.tintColor = .systemGray
         
         view.addSubview(targetLanguageTextField)
@@ -86,7 +88,7 @@ final class TypeVC: UIViewController {
     private lazy var languagePicker: UIPickerView = {
         let picker = UIPickerView()
         
-        picker.delegate = self
+        picker.delegate   = self
         picker.dataSource = self
         
         return picker
@@ -96,17 +98,17 @@ final class TypeVC: UIViewController {
         let field = UITextField()
         field.translatesAutoresizingMaskIntoConstraints = false
         
-        field.text = languages[0].language
+        field.text                        = languages[0].language
         field.allowsEditingTextAttributes = false
         
         // UI Configuration
-        field.inputView = languagePicker
+        field.inputView     = languagePicker
         field.textAlignment = .left
-        field.font = .systemFont(ofSize: 17, weight: .medium)
-        field.tintColor = .clear
+        field.font          = .systemFont(ofSize: 17, weight: .medium)
+        field.tintColor     = .clear
         
         field.leftViewMode = .always
-        field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 0))
+        field.leftView     = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 0))
         
         return field
     }()
@@ -117,7 +119,7 @@ final class TypeVC: UIViewController {
         
         // UI Configuration
         view.backgroundColor = UITableView(frame: .zero, style: .insetGrouped).backgroundColor
-        view.alpha = 0
+        view.alpha           = 0
         
         return view
     }()
@@ -129,16 +131,17 @@ final class TypeVC: UIViewController {
         textView.delegate = self
         
         // UI Configuration
-        textView.backgroundColor = .secondarySystemGroupedBackground
-        textView.font = .systemFont(ofSize: 16)
+        textView.backgroundColor    = .secondarySystemGroupedBackground
+        textView.font               = .systemFont(ofSize: 16)
         textView.layer.cornerRadius = 8
-        textView.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.2)
-        textView.layer.borderWidth = 1
+        textView.layer.borderColor  = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.2)
+        textView.layer.borderWidth  = 1
         
-        textView.alpha = 0
         textView.isUserInteractionEnabled = false
-        textView.returnKeyType = .go
-        textView.autocorrectionType = .no
+        
+        textView.alpha                  = 0
+        textView.returnKeyType          = .go
+        textView.autocorrectionType     = .no
         textView.autocapitalizationType = .none
         
         return textView
@@ -148,7 +151,7 @@ final class TypeVC: UIViewController {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
-        tableView.delegate = self
+        tableView.delegate   = self
         tableView.dataSource = self
         
         // Cells registration
@@ -158,7 +161,7 @@ final class TypeVC: UIViewController {
         // TableView functionality
         tableView.keyboardDismissMode = .onDrag
         tableView.contentInset.bottom = 150
-        tableView.separatorStyle = .none
+        tableView.separatorStyle      = .none
         
         return tableView
     }()
@@ -225,13 +228,13 @@ final class TypeVC: UIViewController {
         
         UIView.animate(withDuration: 0.2) {
             self.targetLanguageView.backgroundColor = .secondarySystemBackground
-            self.targetLanguageTextField.textColor = .systemGray
+            self.targetLanguageTextField.textColor  = .systemGray
         }
         
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0, options: [.allowUserInteraction]) {
             self.sourceLanguageView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             self.targetLanguageView.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
-            self.translateIcon.transform = CGAffineTransform(rotationAngle: .pi / 2)
+            self.translateIcon.transform      = CGAffineTransform(rotationAngle: .pi / 2)
         }
     }
     
@@ -245,13 +248,13 @@ final class TypeVC: UIViewController {
         
         UIView.animate(withDuration: 0.2) {
             self.targetLanguageView.backgroundColor = .clear
-            self.targetLanguageTextField.textColor = .label
+            self.targetLanguageTextField.textColor  = .label
         }
         
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0, options: [.allowUserInteraction]) {
             self.sourceLanguageView.transform = .identity
             self.targetLanguageView.transform = .identity
-            self.translateIcon.transform = .identity
+            self.translateIcon.transform      = .identity
         }
     }
     
@@ -261,14 +264,14 @@ final class TypeVC: UIViewController {
         textView.becomeFirstResponder()
         
         UIView.animate(withDuration: 0.2) {
-            self.textView.alpha = 1
+            self.textView.alpha          = 1
             self.textViewContainer.alpha = 1
         }
         
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0, options: [.allowUserInteraction]) {
-            self.textView.transform = CGAffineTransform(translationX: 0, y: 60)
+            self.textView.transform           = CGAffineTransform(translationX: 0, y: 60)
             self.textViewContainer.transform  = CGAffineTransform(translationX: 0, y: 60)
-            self.tableView.transform = CGAffineTransform(translationX: 0, y: 75)
+            self.tableView.transform          = CGAffineTransform(translationX: 0, y: 75)
         }
     }
     
@@ -276,22 +279,24 @@ final class TypeVC: UIViewController {
     private func endTranslation(translate: Bool = false) {
         if translate, let sourceText = textView.text, !sourceText.isEmpty {
             let target = languages[targetLanguageIndex].language
+            
             self.translate(sourceText: sourceText, target: target)
         }
         
-        textView.text = ""
+        textView.text                     = ""
         textView.isUserInteractionEnabled = false
+        
         textView.resignFirstResponder()
         
         UIView.animate(withDuration: 0.2) {
-            self.textView.alpha = 0
+            self.textView.alpha          = 0
             self.textViewContainer.alpha = 0
         }
         
         UIView.animate(withDuration: 0.5) {
-            self.textView.transform = .identity
+            self.textView.transform           = .identity
             self.textViewContainer.transform  = .identity
-            self.tableView.transform = .identity
+            self.tableView.transform          = .identity
         }
     }
     
@@ -426,17 +431,17 @@ extension TypeVC: UITableViewDelegate, UITableViewDataSource {
             
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-            
             var info = cell.defaultContentConfiguration()
-            info.text = "Clear History"
-            info.textProperties.color = .systemBackground
-            info.textProperties.alignment = .center
-            info.textProperties.font = .systemFont(ofSize: 15, weight: .medium)
-            info.image = UIImage(systemName: "trash")
+            
+            info.text                      = "Clear History"
+            info.textProperties.color      = .systemBackground
+            info.textProperties.alignment  = .center
+            info.textProperties.font       = .systemFont(ofSize: 15, weight: .medium)
+            info.image                     = UIImage(systemName: "trash")
             info.imageProperties.tintColor = .systemBackground
             
             cell.contentConfiguration = info
-            cell.backgroundColor = .label
+            cell.backgroundColor      = .label
             
             cell.isHidden = translations.count > 0 ? false : true
             

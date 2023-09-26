@@ -20,10 +20,10 @@ final class TranslationCell: UITableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         
         // UI Configuration
-        view.backgroundColor = .secondarySystemGroupedBackground
+        view.backgroundColor    = .secondarySystemGroupedBackground
         view.layer.cornerRadius = 8
-        view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.2)
-        view.layer.borderWidth = 1
+        view.layer.borderColor  = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.2)
+        view.layer.borderWidth  = 1
         
         // Components
         view.addSubview(targetLanguageTitle)
@@ -71,8 +71,8 @@ final class TranslationCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         
         // UI Configuration
-        label.font = .systemFont(ofSize: 16, weight: .bold)
-        label.textColor = .link
+        label.font          = .systemFont(ofSize: 16, weight: .bold)
+        label.textColor     = .link
         label.numberOfLines = 0
         
         return label
@@ -82,9 +82,10 @@ final class TranslationCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         
-        // UI Configuration
-        label.font = .systemFont(ofSize: 14)
         label.isUserInteractionEnabled = true
+        
+        // UI Configuration
+        label.font          = .systemFont(ofSize: 14)
         label.numberOfLines = 0
         
         return label
@@ -105,9 +106,9 @@ final class TranslationCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         
         // UI Configuration
-        label.font = .systemFont(ofSize: 12)
+        label.font          = .systemFont(ofSize: 12)
         label.numberOfLines = 0
-        label.textColor = .systemGray
+        label.textColor     = .systemGray
         
         return label
     }()
@@ -117,8 +118,9 @@ final class TranslationCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         contentView.isUserInteractionEnabled = true
+        
         backgroundColor = .clear
-        selectionStyle = .none
+        selectionStyle  = .none
         
         configureGestures()
         configureSubviews()
@@ -138,8 +140,8 @@ final class TranslationCell: UITableViewCell {
     
     func set(translation: Translation) {
         targetLanguageTitle.text = translation.target
-        translationLabel.text = translation.translation
-        sourceLabel.text = translation.sourceText
+        translationLabel.text    = translation.translation
+        sourceLabel.text         = translation.sourceText
     }
     
     // MARK: - ACTIONS

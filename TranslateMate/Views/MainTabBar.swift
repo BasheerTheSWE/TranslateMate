@@ -25,8 +25,8 @@ final class MainTabBar: UITabBarController {
     var voiceDelegate: VoiceDelegate?
     var typeDelegate: TypeDelegate?
     
+    private var recordingStatus: Status          = .notRecording
     private var isVoiceRecordingAuthorized: Bool = false
-    private var recordingStatus: Status = .notRecording
     
     private lazy var voiceButtonView: UIView = {
         let view = UIView()
@@ -37,16 +37,16 @@ final class MainTabBar: UITabBarController {
         // UI Configuration
         view.transform = CGAffineTransform(translationX: self.view.frame.width/4, y: 0)
         
-        view.backgroundColor = .systemBackground
+        view.backgroundColor    = .systemBackground
         view.layer.cornerRadius = 50
-        view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
-        view.layer.borderWidth = 1
+        view.layer.borderColor  = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
+        view.layer.borderWidth  = 1
         
         // Shadows
-        view.layer.shadowColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
+        view.layer.shadowColor   = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
         view.layer.shadowOpacity = 0.3
-        view.layer.shadowOffset = .zero
-        view.layer.shadowRadius = 0
+        view.layer.shadowOffset  = .zero
+        view.layer.shadowRadius  = 0
 
         view.layer.shadowPath = UIBezierPath(roundedRect: view.bounds, cornerRadius: 50).cgPath
         
@@ -60,7 +60,7 @@ final class MainTabBar: UITabBarController {
         // UI Configuration
         imageView.transform = CGAffineTransform(translationX: self.view.frame.width/4, y: 0)
         
-        imageView.tintColor = .systemGray
+        imageView.tintColor   = .systemGray
         imageView.contentMode = .scaleAspectFit
         
         return imageView
@@ -75,10 +75,10 @@ final class MainTabBar: UITabBarController {
         // UI Configuration
         view.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
         
-        view.backgroundColor = .systemBackground
+        view.backgroundColor    = .systemBackground
         view.layer.cornerRadius = 50
-        view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
-        view.layer.borderWidth = 1
+        view.layer.borderColor  = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
+        view.layer.borderWidth  = 1
         
         view.layer.shadowPath = UIBezierPath(roundedRect: view.bounds, cornerRadius: 50).cgPath
         
@@ -93,7 +93,7 @@ final class MainTabBar: UITabBarController {
         // UI Configuration
         imageView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
         
-        imageView.tintColor = .systemGray5
+        imageView.tintColor   = .systemGray5
         imageView.contentMode = .scaleAspectFit
         
         return imageView
@@ -148,8 +148,8 @@ final class MainTabBar: UITabBarController {
         voiceDelegate?.startVoiceRecording()
         
         voiceImageView.tintColor = .systemRed
-        voiceButtonView.layer.borderColor = CGColor(red: 1, green: 0.25, blue: 0.25, alpha: 1)
-        voiceButtonView.layer.shadowColor = CGColor(red: 1, green: 0.25, blue: 0.25, alpha: 1)
+        voiceButtonView.layer.borderColor  = CGColor(red: 1, green: 0.25, blue: 0.25, alpha: 1)
+        voiceButtonView.layer.shadowColor  = CGColor(red: 1, green: 0.25, blue: 0.25, alpha: 1)
         voiceButtonView.layer.shadowRadius = 20
     }
     
@@ -158,8 +158,8 @@ final class MainTabBar: UITabBarController {
         voiceDelegate?.stopVoiceRecording()
         
         voiceImageView.tintColor = .systemGray
-        voiceButtonView.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
-        voiceButtonView.layer.shadowColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
+        voiceButtonView.layer.borderColor  = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
+        voiceButtonView.layer.shadowColor  = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
         voiceButtonView.layer.shadowRadius = 0
     }
     
@@ -185,15 +185,15 @@ final class MainTabBar: UITabBarController {
         
         UIView.animate(withDuration: 0.2) {
             self.voiceImageView.tintColor = self.recordingStatus == .isRecording ? .systemRed : .systemGray
-            self.typeImageView.tintColor = .systemGray5
+            self.typeImageView.tintColor  = .systemGray5
         }
         
         UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0, options: [.allowUserInteraction]) {
             self.voiceButtonView.transform = CGAffineTransform(translationX: self.view.frame.width/4, y: 0)
-            self.voiceImageView.transform = CGAffineTransform(translationX: self.view.frame.width/4, y: 0)
+            self.voiceImageView.transform  = CGAffineTransform(translationX: self.view.frame.width/4, y: 0)
             
             self.typeButtonView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
-            self.typeImageView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+            self.typeImageView.transform  = CGAffineTransform(scaleX: 0.5, y: 0.5)
         }
     }
     
@@ -210,15 +210,15 @@ final class MainTabBar: UITabBarController {
         
         UIView.animate(withDuration: 0.2) {
             self.voiceImageView.tintColor = .systemGray5
-            self.typeImageView.tintColor = .systemGray
+            self.typeImageView.tintColor  = .systemGray
         }
         
         UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0, options: [.allowUserInteraction]) {
             self.typeButtonView.transform = CGAffineTransform(translationX: -self.view.frame.width/4, y: 0)
-            self.typeImageView.transform = CGAffineTransform(translationX: -self.view.frame.width/4, y: 0)
+            self.typeImageView.transform  = CGAffineTransform(translationX: -self.view.frame.width/4, y: 0)
             
             self.voiceButtonView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
-            self.voiceImageView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+            self.voiceImageView.transform  = CGAffineTransform(scaleX: 0.5, y: 0.5)
         }
     }
     

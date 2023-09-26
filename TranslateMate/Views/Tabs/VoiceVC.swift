@@ -28,10 +28,10 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         case notRecording
     }
     
-    private var status: Status = .notRecording
-    private var targetLanguageIndex: Int = 0
+    private var status: Status            = .notRecording
+    private var targetLanguageIndex: Int  = 0
     private var currentSourceText: String = ""
-    private let languages: [Language] = DataManager.shared.getLanguages()
+    private let languages: [Language]     = DataManager.shared.getLanguages()
     
     var voiceRecordingAuthDelegate: VoiceRecordingAuthDelegate?
     var translationsDelegate: TranslationsDelegate?
@@ -39,32 +39,33 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     
     // MARK: - VIEWS
     private let targetLanguageTapRegion: UIView = ViewManager.shared.getTapRegion()
-    private let translateIcon: UIImageView = ViewManager.shared.getIcon(named: "arrow.forward", tintColor: .label)
+    private let translateIcon: UIImageView      = ViewManager.shared.getIcon(named: "arrow.forward", tintColor: .label)
     
-    private let copyIcon: UIImageView = ViewManager.shared.getIcon(named: "square.on.square", tintColor: .link)
+    private let copyIcon: UIImageView  = ViewManager.shared.getIcon(named: "square.on.square", tintColor: .link)
     private let speakIcon: UIImageView = ViewManager.shared.getIcon(named: "waveform.and.mic", tintColor: .link)
-    private let hideIcon: UIImageView = ViewManager.shared.getIcon(named: "eye.slash", tintColor: .link)
+    private let hideIcon: UIImageView  = ViewManager.shared.getIcon(named: "eye.slash", tintColor: .link)
     
-    private let copyTapRegion: UIView = ViewManager.shared.getTapRegion()
+    private let copyTapRegion: UIView  = ViewManager.shared.getTapRegion()
     private let speakTapRegion: UIView = ViewManager.shared.getTapRegion()
-    private let hideTapRegion: UIView = ViewManager.shared.getTapRegion()
+    private let hideTapRegion: UIView  = ViewManager.shared.getTapRegion()
     
     
     private lazy var targetLanguageView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.isUserInteractionEnabled = true
+        view.isUserInteractionEnabled                  = true
         
         // UI Configuration
         view.backgroundColor = .clear
         
         view.layer.cornerRadius = 8
-        view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
-        view.layer.borderWidth = 1
+        view.layer.borderColor  = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
+        view.layer.borderWidth  = 1
         
         // Components
         let imageView: UIImageView = UIImageView(image: UIImage(systemName: "chevron.down.circle"))
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        
         imageView.tintColor = .systemGray
         
         view.addSubview(targetLanguageTextField)
@@ -94,8 +95,8 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         view.backgroundColor = .clear
         
         view.layer.cornerRadius = 8
-        view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
-        view.layer.borderWidth = 1
+        view.layer.borderColor  = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
+        view.layer.borderWidth  = 1
         
         // Components
         let label = UILabel()
@@ -118,12 +119,13 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     private let recordedTextView: UITextView = {
         let textView = UITextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
+        
         textView.isEditable = false
         
         // UI Configuration
         textView.backgroundColor = .clear
-        textView.font = .systemFont(ofSize: 25, weight: .medium)
-        textView.textAlignment = .center
+        textView.font            = .systemFont(ofSize: 25, weight: .medium)
+        textView.textAlignment   = .center
         
         return textView
     }()
@@ -131,7 +133,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     private lazy var languagePicker: UIPickerView = {
         let picker = UIPickerView()
         
-        picker.delegate = self
+        picker.delegate   = self
         picker.dataSource = self
         
         return picker
@@ -141,17 +143,17 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         let field = UITextField()
         field.translatesAutoresizingMaskIntoConstraints = false
         
-        field.text = languages[0].language
+        field.text                        = languages[0].language
         field.allowsEditingTextAttributes = false
         
         // UI Configuration
-        field.inputView = languagePicker
+        field.inputView     = languagePicker
         field.textAlignment = .left
-        field.font = .systemFont(ofSize: 17, weight: .medium)
-        field.tintColor = .clear
+        field.font          = .systemFont(ofSize: 17, weight: .medium)
+        field.tintColor     = .clear
         
         field.leftViewMode = .always
-        field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 0))
+        field.leftView     = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 0))
         
         return field
     }()
@@ -172,7 +174,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         label.translatesAutoresizingMaskIntoConstraints = false
         
         // UI Configuration
-        label.font = .systemFont(ofSize: 16)
+        label.font          = .systemFont(ofSize: 16)
         label.numberOfLines = 0
         
         return label
@@ -183,9 +185,9 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         label.translatesAutoresizingMaskIntoConstraints = false
         
         // UI Configuration
-        label.font = .systemFont(ofSize: 12)
+        label.font          = .systemFont(ofSize: 12)
         label.numberOfLines = 3
-        label.textColor = .systemGray
+        label.textColor     = .systemGray
         
         return label
     }()
@@ -196,13 +198,13 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         
         // UI Configuration
         view.isUserInteractionEnabled = true
-        view.backgroundColor = .clear
+        view.backgroundColor          = .clear
         
         // Components
-        let title = UILabel()
+        let title     = UILabel()
         let imageView = UIImageView(image: UIImage(systemName: "chevron.down.circle"))
         
-        title.translatesAutoresizingMaskIntoConstraints = false
+        title.translatesAutoresizingMaskIntoConstraints     = false
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
         title.text = "Translated Into"
@@ -238,12 +240,13 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
                 
         // UI Configuration
         view.layer.cornerRadius = 8
-        view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.2)
-        view.layer.borderWidth = 1
+        view.layer.borderColor  = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.2)
+        view.layer.borderWidth  = 1
         
         // Components
         let separator = UIView()
         separator.translatesAutoresizingMaskIntoConstraints = false
+        
         separator.backgroundColor = .link
         
         translationLabel.text = "hello there my name is basheer and I am an ios developer hoping to be very rich in the future"
@@ -279,8 +282,8 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         
         // UI Configuration
         view.layer.cornerRadius = 20
-        view.layer.borderColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.2)
-        view.layer.borderWidth = 1
+        view.layer.borderColor  = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.2)
+        view.layer.borderWidth  = 1
         
         // Components
         view.addSubview(copyIcon)
@@ -398,6 +401,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     
     func setTabBar(controller: UITabBarController) {
         guard let controller = controller as? MainTabBar else { fatalError() }
+        
         controller.voiceDelegate = self
     }
     
@@ -431,8 +435,9 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         
         let sourceText = currentSourceText
         
-        let targetCode = languages[targetLanguageIndex].code
+        let targetCode     = languages[targetLanguageIndex].code
         let targetLanguage = languages[targetLanguageIndex].language
+        
         prepareToTranslate()
         
         APIManager.shared.translate(parent: self, sourceText: sourceText, target: targetCode) { [weak self] translation in
@@ -444,8 +449,8 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
             
             // Updating the translationView components
             self?.translationContainerTargetLanguageLabel.text = targetLanguage
-            self?.translationLabel.text = translation
-            self?.sourceLabel.text = sourceText
+            self?.translationLabel.text                        = translation
+            self?.sourceLabel.text                             = sourceText
             
             // Saving the new translation to CoreData
             CoreDataManager.shared.saveObject(parent: strongSelf, target: targetLanguage, translation: translation, sourceText: sourceText)
@@ -464,7 +469,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         
         UIView.animate(withDuration: 0.2) {
             self.targetLanguageView.backgroundColor = .secondarySystemBackground
-            self.targetLanguageTextField.textColor = .systemGray
+            self.targetLanguageTextField.textColor  = .systemGray
             
             self.translationContainerTitleView.alpha = 0.25
         }
@@ -472,7 +477,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0, options: [.allowUserInteraction]) {
             self.sourceLanguageView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             self.targetLanguageView.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
-            self.translateIcon.transform = CGAffineTransform(rotationAngle: .pi / 2)
+            self.translateIcon.transform      = CGAffineTransform(rotationAngle: .pi / 2)
         }
     }
     
@@ -482,7 +487,7 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         
         UIView.animate(withDuration: 0.2) {
             self.targetLanguageView.backgroundColor = .clear
-            self.targetLanguageTextField.textColor = .label
+            self.targetLanguageTextField.textColor  = .label
             
             self.translationContainerTitleView.alpha = 1
         }
@@ -490,13 +495,14 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0, options: [.allowUserInteraction]) {
             self.sourceLanguageView.transform = .identity
             self.targetLanguageView.transform = .identity
-            self.translateIcon.transform = .identity
+            self.translateIcon.transform      = .identity
         }
     }
     
     
     @objc private func copyTranslation() {
         guard let text = translationLabel.text else { return }
+        
         UIPasteboard.general.string = text
         
         ViewManager.shared.animateIcon(icon: copyIcon, tapRegion: copyTapRegion)
@@ -505,11 +511,12 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     
     @objc private func speakTranslation() {
         guard let text = translationLabel.text else { return }
+        
         let speechSynthesizer = AVSpeechSynthesizer()
-        let speechUtterance = AVSpeechUtterance(string: text)
+        let speechUtterance   = AVSpeechUtterance(string: text)
 
         // Configure the speech utterance as needed
-        speechUtterance.rate = AVSpeechUtteranceDefaultSpeechRate // Adjust speech rate
+        speechUtterance.rate  = AVSpeechUtteranceDefaultSpeechRate // Adjust speech rate
         speechUtterance.voice = AVSpeechSynthesisVoice(language: languages[targetLanguageIndex].language) // Specify the desired language
 
         // Start speaking
@@ -532,8 +539,9 @@ final class VoiceVC: UIViewController, SFSpeechRecognizerDelegate {
     
     
     private func endTranslationPreparations() {
-        recordedTextView.text = ""
+        recordedTextView.text      = ""
         recordedTextView.textColor = .label
+        
         activityIndicator.stopAnimating()
     }
     

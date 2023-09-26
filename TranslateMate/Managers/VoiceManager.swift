@@ -13,8 +13,9 @@ final class VoiceManager {
     
     static let shared = VoiceManager()
     
-    private let audioEngine = AVAudioEngine()
+    private let audioEngine      = AVAudioEngine()
     private let speechRecognizer = SFSpeechRecognizer()
+    
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var recognitionTask: SFSpeechRecognitionTask?
     
@@ -49,6 +50,7 @@ final class VoiceManager {
         
         // Configure the audio session for recording
         let audioSession = AVAudioSession.sharedInstance()
+        
         try audioSession.setCategory(.record, mode: .measurement, options: .duckOthers)
         try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
         
