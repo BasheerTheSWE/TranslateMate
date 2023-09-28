@@ -17,7 +17,7 @@ class APIManager {
             // Don't event think about stealing this my friend, I'm using the free plan anyway 😛
             // You can just go to rapidapi.com, look up "MyMemory - Translation Memory" and get your own keys ...
             
-            "X-RapidAPI-Key" : "42abd4dd86msha0250c6daf8f1b7p1b0618jsn59f4dd9f81bb",
+            "X-RapidAPI-Key" : "42abd4dd86msha0250Bc6daf8f1b7p1b0618jsn59f4dd9f81bb",
             "X-RapidAPI-Host": "translated-mymemory---translation-memory.p.rapidapi.com"
         ]
         

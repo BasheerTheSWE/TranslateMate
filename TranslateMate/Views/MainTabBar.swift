@@ -28,6 +28,8 @@ final class MainTabBar: UITabBarController {
     private var recordingStatus: Status          = .notRecording
     private var isVoiceRecordingAuthorized: Bool = false
     
+    
+    // MARK: - VIEWS
     private lazy var voiceButtonView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
