@@ -77,5 +77,5 @@ If you wish to contact with me directly and talk about this project you're more 
 #### Contact
 
 My name is **Basheer Abdulmalik** and you can find me here 👇
-* [Twitter](https://twitter.com/basheer_dev) $\implies$ @Basheer_Dev.
+* [Twitter](https://twitter.com/basheertheswe) $\implies$ @BasheerTheSWE.
 * [Linkedin](https://www.linkedin.com/in/basheer-abdulmalik) $\implies$ @basheer-abdulmalik.
